@@ -17,7 +17,7 @@
 //
 //      Lattice Semiconductor provides no warranty regarding the use or
 //      functionality of this code. It is the user's responsibility to
-//      verify the user’s design for consistency and functionality through
+//      verify the user's design for consistency and functionality through
 //      the use of formal verification methods.
 //
 //   --------------------------------------------------------------------
