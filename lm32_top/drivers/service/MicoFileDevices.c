@@ -578,4 +578,3 @@ int MicoFileRedirIO(int StreamId, const char *deviceName)
      */
     return(retvalue);
 }
-

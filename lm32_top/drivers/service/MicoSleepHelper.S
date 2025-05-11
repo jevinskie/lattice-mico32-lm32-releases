@@ -75,4 +75,3 @@ MicoSleepHelper:
 .LM4:
     ret
     .size     MicoSleepHelper, .-MicoSleepHelper
-

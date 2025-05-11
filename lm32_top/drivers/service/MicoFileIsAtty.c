@@ -73,4 +73,3 @@ int isatty(int fd)
 #ifdef __cplusplus
 }
 #endif
-

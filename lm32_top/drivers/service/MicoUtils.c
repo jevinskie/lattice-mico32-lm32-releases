@@ -174,5 +174,3 @@ void MicoSleepMilliSecs(unsigned int timeInMilliSecs)
     MicoSleepHelper(timeInMilliSecs, DEFINED_MICO_SLEEP_MILLISEC_CONSTANT_VALUE);
     return;
 }
-
-

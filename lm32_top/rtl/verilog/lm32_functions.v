@@ -67,4 +67,3 @@ begin
    clogb2_v1 = i-1;
 end
 endfunction
-

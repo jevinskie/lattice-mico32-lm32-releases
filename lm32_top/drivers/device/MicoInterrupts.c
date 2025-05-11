@@ -364,4 +364,3 @@ unsigned int MicoDisableInterrupts(void)
 }
 
 #endif
-

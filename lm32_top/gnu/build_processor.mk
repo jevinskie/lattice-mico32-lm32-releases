@@ -134,4 +134,3 @@ else
 -include $(PLATFORM_RULES_MAKEFILE)
 -include $(PLATFORM_LINKER_SETTINGS_MAKEFILE)
 endif
-

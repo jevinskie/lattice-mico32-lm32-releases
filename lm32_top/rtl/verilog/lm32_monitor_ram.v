@@ -2220,4 +2220,3 @@ module lm32_monitor_ram (DataInA, DataInB, AddressA, AddressB, ClockA,
    endgenerate
 
 endmodule
-

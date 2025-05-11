@@ -3081,4 +3081,3 @@ TYPEA ADDR_BIT2 (
    assign REG_UPDATE = JTAGREG_ENABLE & JUPDATE;
 
 endmodule
-

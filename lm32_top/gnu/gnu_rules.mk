@@ -119,4 +119,3 @@ $(OUTPUT_DIR)/%.o: %.s
 # Enhance dependency to include other stuff
 $(OUTPUT_DIR)/%.elf : $(PROJECT_LIBRARY) $(ARCHIVE_OBJS)
 	$(CC) $(CPU_CONFIG) $(LDFLAGS) $(PROJECT_LINKER_SCRIPT) -o $@ $(ARCHIVE_OBJS) $(PROJECT_LIBRARY)
-

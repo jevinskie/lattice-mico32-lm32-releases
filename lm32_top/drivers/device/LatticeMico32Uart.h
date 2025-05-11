@@ -98,4 +98,3 @@ extern "C"
 
 
 #endif /* _LATTICEMICO32_UART_HEADER_FILE_ */
-

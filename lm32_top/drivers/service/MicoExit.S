@@ -54,4 +54,3 @@ _exit:
         /* This call doesn't return */
         mvi     r8, SYS_exit
         scall
-

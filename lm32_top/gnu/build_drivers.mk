@@ -59,5 +59,3 @@ ifneq "$(MAKECMDGOALS)" "clean"
 else
 	rm -f drivers.mk
 endif
-
-

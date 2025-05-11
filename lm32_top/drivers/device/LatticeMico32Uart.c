@@ -395,4 +395,3 @@ void LatticeMico32_JTAGFileInit(LatticeMico32Ctx_t *pCPU)
      */
     return;
 }
-

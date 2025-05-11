@@ -128,4 +128,3 @@ LatticeMico32DbgClose:
         sw      (r4+0), r3
         ret
         .size     LatticeMico32DbgClose, .-LatticeMico32DbgClose
-

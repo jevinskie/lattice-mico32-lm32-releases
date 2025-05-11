@@ -76,4 +76,3 @@ module TYPEB
    assign TDO = tdoInt;
 
 endmodule
-

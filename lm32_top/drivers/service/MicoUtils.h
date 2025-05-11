@@ -106,4 +106,3 @@ void MicoSleepMilliSecs(unsigned int timeInMilliSecs);
 #endif /* __cplusplus */
 
 #endif /*MICO32_MICOUTILS_HEADER_FILE*/
-

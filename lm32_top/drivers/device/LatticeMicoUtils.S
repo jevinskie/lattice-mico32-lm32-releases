@@ -79,4 +79,3 @@ asmMicoFlushInstrCache:
         nop
         b    ra
         .size   asmMicoFlushInstrCache, .-asmMicoFlushInstrCache
-

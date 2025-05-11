@@ -80,4 +80,3 @@ int _close(int fd)
 #ifdef __cplusplus
 }
 #endif
-

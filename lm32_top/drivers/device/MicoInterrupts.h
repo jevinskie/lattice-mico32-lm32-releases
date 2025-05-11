@@ -166,4 +166,3 @@ void MicoEnableInterrupts(unsigned int intrMask);
 #endif /* __cplusplus */
 
 #endif
-

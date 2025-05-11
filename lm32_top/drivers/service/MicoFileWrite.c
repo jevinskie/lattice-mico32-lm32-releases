@@ -78,4 +78,3 @@ int _write(int fd, const void *buf, unsigned int cnt)
 #ifdef __cplusplus
 }
 #endif
-

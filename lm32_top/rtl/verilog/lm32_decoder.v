@@ -601,4 +601,3 @@ assign branch_offset = select_call_immediate == `TRUE
                         : branch_immediate;
 
 endmodule
-

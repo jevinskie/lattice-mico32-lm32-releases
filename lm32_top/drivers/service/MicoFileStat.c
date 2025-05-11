@@ -82,4 +82,3 @@ int _fstat(int fd, struct stat *pstat)
 #ifdef __cplusplus
 }
 #endif
-

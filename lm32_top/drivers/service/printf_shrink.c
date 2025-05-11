@@ -849,4 +849,3 @@ int LSCC_PUTCHAR(int c)
 	OUTPUT_CHAR((char)c, &data);
 	return(c);
 }
-
