@@ -80,13 +80,13 @@ module TYPEA(
   always @ (negedge CLK or negedge RESET_N)
   begin
       if (RESET_N == 1'b0)
-         tdoInt <= #1 1'b0;
+         tdoInt <= `D 1'b0;
       else if (CLK == 1'b0)
          if (CLKEN == 1'b1)
             if (CAPTURE_DR == 1'b0)
-               tdoInt <= #1 TDI;
+               tdoInt <= `D TDI;
             else
-               tdoInt <= #1 DATA_IN;
+               tdoInt <= `D DATA_IN;
   end
 
    assign TDO = tdoInt;
@@ -94,9 +94,9 @@ module TYPEA(
   always @ (negedge CLK or negedge RESET_N)
    begin
       if (RESET_N == 1'b0)
-         DATA_OUT <= #1 1'b0;
+         DATA_OUT <= `D 1'b0;
       else if (CLK == 1'b0)
          if (UPDATE_DR == 1'b1)
-            DATA_OUT <= #1 tdoInt;
+            DATA_OUT <= `D tdoInt;
    end
 endmodule

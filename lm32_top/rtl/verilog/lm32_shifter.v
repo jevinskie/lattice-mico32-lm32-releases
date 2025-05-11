@@ -139,15 +139,15 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        right_shift_result <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        direction_m <= #1 `FALSE;
+        right_shift_result <= `D {`LM32_WORD_WIDTH{1'b0}};
+        direction_m <= `D `FALSE;
     end
     else
     begin
         if (stall_x == `FALSE)
         begin
-            right_shift_result <= #1 {right_shift_in, right_shift_operand} >> operand_1_x[`LM32_SHIFT_RNG];
-            direction_m <= #1 direction_x;
+            right_shift_result <= `D {right_shift_in, right_shift_operand} >> operand_1_x[`LM32_SHIFT_RNG];
+            direction_m <= `D direction_x;
         end
     end
 end 

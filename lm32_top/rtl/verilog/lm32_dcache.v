@@ -441,11 +441,11 @@ generate
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        refill_way_select <= #1 {{associativity-1{1'b0}}, 1'b1};
+        refill_way_select <= `D {{associativity-1{1'b0}}, 1'b1};
     else
     begin        
         if (refill_request == `TRUE)
-            refill_way_select <= #1 {refill_way_select[0], refill_way_select[1]};
+            refill_way_select <= `D {refill_way_select[0], refill_way_select[1]};
     end
 end
     end 
@@ -455,9 +455,9 @@ endgenerate
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        refilling <= #1 `FALSE;
+        refilling <= `D `FALSE;
     else 
-        refilling <= #1 refill;
+        refilling <= `D refill;
 end
 
 // Instruction cache control FSM
@@ -465,11 +465,11 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        state <= #1 `LM32_DC_STATE_FLUSH;
-        flush_set <= #1 {`LM32_DC_TMEM_ADDR_WIDTH{1'b1}};
-        refill_request <= #1 `FALSE;
-        refill_address <= #1 {`LM32_WORD_WIDTH{1'bx}};
-        restart_request <= #1 `FALSE;
+        state <= `D `LM32_DC_STATE_FLUSH;
+        flush_set <= `D {`LM32_DC_TMEM_ADDR_WIDTH{1'b1}};
+        refill_request <= `D `FALSE;
+        refill_address <= `D {`LM32_WORD_WIDTH{1'bx}};
+        restart_request <= `D `FALSE;
     end
     else 
     begin
@@ -479,35 +479,35 @@ begin
         `LM32_DC_STATE_FLUSH:
         begin
             if (flush_set == {`LM32_DC_TMEM_ADDR_WIDTH{1'b0}})
-                state <= #1 `LM32_DC_STATE_CHECK;
-            flush_set <= #1 flush_set - 1'b1;
+                state <= `D `LM32_DC_STATE_CHECK;
+            flush_set <= `D flush_set - 1'b1;
         end
         
         // Check for cache misses
         `LM32_DC_STATE_CHECK:
         begin
             if (stall_a == `FALSE)
-                restart_request <= #1 `FALSE;
+                restart_request <= `D `FALSE;
             if (miss == `TRUE)
             begin
-                refill_request <= #1 `TRUE;
-                refill_address <= #1 address_m;
-                state <= #1 `LM32_DC_STATE_REFILL;
+                refill_request <= `D `TRUE;
+                refill_address <= `D address_m;
+                state <= `D `LM32_DC_STATE_REFILL;
             end
             else if (dflush == `TRUE)
-                state <= #1 `LM32_DC_STATE_FLUSH;
+                state <= `D `LM32_DC_STATE_FLUSH;
         end
 
         // Refill a cache line
         `LM32_DC_STATE_REFILL:
         begin
-            refill_request <= #1 `FALSE;
+            refill_request <= `D `FALSE;
             if (refill_ready == `TRUE)
             begin
                 if (last_refill == `TRUE)
                 begin
-                    restart_request <= #1 `TRUE;
-                    state <= #1 `LM32_DC_STATE_CHECK;
+                    restart_request <= `D `TRUE;
+                    state <= `D `LM32_DC_STATE_CHECK;
                 end
             end
         end
@@ -523,7 +523,7 @@ generate
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        refill_offset <= #1 {addr_offset_width{1'b0}};
+        refill_offset <= `D {addr_offset_width{1'b0}};
     else 
     begin
         case (state)
@@ -532,14 +532,14 @@ begin
         `LM32_DC_STATE_CHECK:
         begin
             if (miss == `TRUE)
-                refill_offset <= #1 {addr_offset_width{1'b0}};
+                refill_offset <= `D {addr_offset_width{1'b0}};
         end
 
         // Refill a cache line
         `LM32_DC_STATE_REFILL:
         begin
             if (refill_ready == `TRUE)
-                refill_offset <= #1 refill_offset + 1'b1;
+                refill_offset <= `D refill_offset + 1'b1;
         end
         
         endcase        
