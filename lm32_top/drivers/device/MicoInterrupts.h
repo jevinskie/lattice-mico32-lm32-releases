@@ -85,7 +85,7 @@ void MicoISRInitialize(void);
  * Registers and de-registers interrupt-handler routine.
  * To register, pass a valid function pointer to the Callback parameter.
  * To deregister, pass 0 as the callback parameter.
- * 
+ *
  * Arguments:
  *  unsigned int IntLevel: interrupt line number that your component is
  *      connected to (0 to 31).
@@ -95,14 +95,14 @@ void MicoISRInitialize(void);
  *
  * Return values:
  *      MICO_STATUS_OK if successful.
- */ 
+ */
 mico_status MicoRegisterISR(unsigned int IntLevel, void *Context, ISRCallback Callback);
 
 
 
 /*
  * Disables a specific interrupt
- * 
+ *
  * Arguments:
  *  unsigned int Intlevel: interrupt 0 through 31 that needs to
  *      be disabled.
@@ -115,20 +115,20 @@ mico_status MicoDisableInterrupt(unsigned int IntLevel);
 
 /*
  * Enables a specific interrupt
- * 
+ *
  * Arguments:
  *  unsigned int Intlevel: interrupt 0 through 31 that needs to
  *      be enabled.
  *
  * Return values:
  *      MICO_STATUS_OK if successful.
- */ 
+ */
 mico_status MicoEnableInterrupt(unsigned int IntLevel);
 
 
 /*
  * Disables all external component interrupts
- * 
+ *
  * Arguments:
  *      None.
  *
@@ -146,9 +146,9 @@ unsigned int MicoDisableInterrupts(void);
 /*
  * Enables selected interrupts from 0 through 31
  * as indicated by the unsigned int intrMask where
- * bit-0 corresponds to interrupt line 0 and 
+ * bit-0 corresponds to interrupt line 0 and
  * bit-31 corresponds to interrupt line 31.
- * 
+ *
  * Arguments:
  *      None.
  *

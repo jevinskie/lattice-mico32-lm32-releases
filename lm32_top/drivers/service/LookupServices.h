@@ -79,7 +79,7 @@ extern "C"
 
     /* Function for registering a device for lookup-by-name.
      * Arguments:
-     *   DeviceReg_t *pDevReg: Pointer to a valid allocation of 
+     *   DeviceReg_t *pDevReg: Pointer to a valid allocation of
      *      DeviceReg_t structure.  This must remain valid
      *      and should not be modified for the duration of the
      *      application.
@@ -93,7 +93,7 @@ extern "C"
      *      const char *Name: pointer to a character string
      *      representing device-name (case sensitive)
      * Returns:
-     *  void *: pointer to the looked-up device's 
+     *  void *: pointer to the looked-up device's
      *          instance-specific information.  Will be 0 if
      *          no device with matching name is found.
      */
@@ -112,7 +112,7 @@ extern "C"
      *          If non-null pointer, it must point to a valid
      *          string (case-sensitive).
      *
-     *   DevFind_st *FindCtx: pointer to a valid allocation of 
+     *   DevFind_st *FindCtx: pointer to a valid allocation of
      *           DevFind_st that will be referenced by
      *           MicoGetFirstDev for future invocations to
      *           MicoGetNextDev
@@ -125,12 +125,12 @@ extern "C"
 
 
     /*
-     * Finds the next registered device that matches the 
+     * Finds the next registered device that matches the
      * find-criteria provided in the prior MicoGetFirstDev
      * invocation.
      *
      * Arguments:
-     *   DevFind_st *FindCtx: pointer to a valid allocation of 
+     *   DevFind_st *FindCtx: pointer to a valid allocation of
      *           DevFind_st that was provided to MicoGetFirstDev
      *           invocation.  Caller must not modify the structure
      *           referenced by this pointer.

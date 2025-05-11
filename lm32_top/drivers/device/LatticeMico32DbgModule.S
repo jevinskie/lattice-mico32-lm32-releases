@@ -80,19 +80,19 @@
 
 #include <syscall.h>
 
-/* 
+/*
 
         System call convention:
-      - System call number in register r8 
+      - System call number in register r8
       - Return value in r1 ( and r2 only if 64-bit value)
 */
 
         .extern errno
         .global LatticeMico32DbgWrite
         .type LatticeMico32DbgWrite, @function
-LatticeMico32DbgWrite: 
+LatticeMico32DbgWrite:
         mvi     r8, SYS_write
-        scall   
+        scall
         mvhi    r4, hi(errno)
         ori     r4, r4, lo(errno)
         sw      (r4+0), r3
@@ -106,7 +106,7 @@ LatticeMico32DbgRead:
         mvhi    r4, hi(errno)
         ori     r4, r4, lo(errno)
         sw      (r4+0), r3
-        ret                
+        ret
         .size     LatticeMico32DbgRead, .-LatticeMico32DbgRead
         .global LatticeMico32DbgOpen
         .type LatticeMico32DbgOpen, @function
@@ -120,12 +120,12 @@ LatticeMico32DbgOpen:
         .size     LatticeMico32DbgOpen, .-LatticeMico32DbgOpen
         .global LatticeMico32DbgClose
        .type LatticeMico32DbgClose, @function
-LatticeMico32DbgClose:    
+LatticeMico32DbgClose:
         mvi     r8, SYS_close
         scall
         mvhi    r4, hi(errno)
         ori     r4, r4, lo(errno)
         sw      (r4+0), r3
-        ret                
+        ret
         .size     LatticeMico32DbgClose, .-LatticeMico32DbgClose
 

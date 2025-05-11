@@ -70,7 +70,7 @@
 		<Parm Name="CFG_WATCHPOINTS" Type="Integer" ValueRange="0-4" Value="0" Text="# of H/W Watchpoint Registers" Condition="DEBUG_ROM"/>
 		<Parm Name="CFG_JTAG_ENABLED" Type="define" Value="def" Condition="DEBUG_ROM" Hide="true"/>
 		<Parm Name="CFG_JTAG_UART_ENABLED" Type="define" Value="def" Condition="DEBUG_ROM" Hide="true"/>
-									
+
 		<Parm Name="CFG_ICACHE_ENABLED" Type="define" Value="def" Text="Instruction Cache Enabled"/>
 		<Parm Name="CFG_ICACHE_BASE_ADDRESS" Type="Integer" Value="0x00000000" Condition="CFG_ICACHE_ENABLED" Text="Base Address" Hide="true" />
 		<Parm Name="CFG_ICACHE_LIMIT" Type="Integer" Value="0x0FFFFFFF" Condition="CFG_ICACHE_ENABLED" Text="Address Limit" Hide="true" />
@@ -106,13 +106,13 @@
 		<Parm Name="CFG_DRAM_BASE_ADDRESS" Type="Integer" Value="0x00200000" Condition="CFG_DRAM_ENABLED" Text="Base Address"/>
 		<Parm Name="CFG_DRAM_LIMIT" Type="Integer" Value="2048" Condition="CFG_DRAM_ENABLED" Text="Size of Memory(in bytes)" Enable="true"/>
 		<Parm Name="CFG_DRAM_INIT_FILE_FORMAT" Value="hex" Type="String" ListValues="hex,binary" Text="File Format" isparm="false" Condition="CFG_DRAM_ENABLED"/>
-		<Parm Name="CFG_DRAM_INIT_FILE" Condition="CFG_DRAM_ENABLED" Value="none" Type="File" OType="String" Text="Initialization File Name"  isparm="false" Extension="*.mem"/>		
+		<Parm Name="CFG_DRAM_INIT_FILE" Condition="CFG_DRAM_ENABLED" Value="none" Type="File" OType="String" Text="Initialization File Name"  isparm="false" Extension="*.mem"/>
 		<Parm Name="CFG_FAST_DOWNLOAD_ENABLED" Condition="DEBUG_ROM" Type="define" Value="undef" Text="Fast Application Download H/W"/>
 	  </Parms>
         <GUIS Columns="2" Help="component_help\lm32.htm" Name="LM32" TabCount="2">
             <GUI Widget="TabItem" Columns="2" Text="General" />
             <GUI Widget="Text" Span="1" Name="InstanceName" Width="40"/>
-			
+
             <GUI Widget="Group" Span="1" Text="Settings" Columns="2"/>
             <GUI Widget="Check" Span="2" Name="CFG_MC_DIVIDE_ENABLED"/>
             <GUI Widget="Check" Span="2" Name="CFG_SIGN_EXTEND_ENABLED"/>
@@ -120,7 +120,7 @@
 			<GUI Widget="Label" Span="1" Text="Register File Setting"/>
 			<GUI Widget="Radio" Span="1" Name="CFG_EBR_POSEDGE_REGISTER_FILE"/>
 			<GUI Widget="Label" Span="1" Name=""/>
-			<GUI Widget="Radio" Span="1" Name="CFG_DISTRAM_POSEDGE_REGISTER_FILE"/>		   
+			<GUI Widget="Radio" Span="1" Name="CFG_DISTRAM_POSEDGE_REGISTER_FILE"/>
 
 			<GUI Widget="EndGroup"/>
 
@@ -145,7 +145,7 @@
             <GUI Widget="Check" Span="1" Name="SHIFT_ENABLE1"/>
             <GUI Widget="Radio" Span="1" Name="CFG_PL_BARREL_SHIFT_ENABLED"/>
             <GUI Widget="Radio" Span="1" Name="CFG_MC_BARREL_SHIFT_ENABLED"/>
-            <GUI Widget="EndGroup"/>            
+            <GUI Widget="EndGroup"/>
 
             <GUI Widget="Group" Span="1" Text="Instruction Cache" Columns="3"/>
             <GUI Widget="Check" Span="1" Name="CFG_ICACHE_ENABLED"/>
@@ -183,7 +183,7 @@
             <GUI Widget="TabItem" Columns="1" Text="Inline Memory"/>
             <GUI Widget="Group" Span="1" Text="Instruction Inline Memory" Columns="2"/>
             <GUI Widget="Check" Span="2" Name="CFG_IROM_ENABLED"/>
-		<GUI Widget="Text" Span="1" Name="InstInlineName"/>		
+		<GUI Widget="Text" Span="1" Name="InstInlineName"/>
             <GUI Widget="Text" Span="1" Name="CFG_IROM_BASE_ADDRESS"/>
             <GUI Widget="Text" Span="1" Name="CFG_IROM_LIMIT"/>
             <GUI Widget="Group" Span="2" Text="Memory File " Columns="3"/>
@@ -200,7 +200,7 @@
             <GUI Widget="Group" Span="2" Text="Memory File" Columns="3"/>
 		<GUI Widget="Browser" Span="1" Name="CFG_DRAM_INIT_FILE" Width="40"/>
           	<GUI Widget="Combo" Span="1" Name="CFG_DRAM_INIT_FILE_FORMAT"/>
-            
+
 	    <GUI Widget="EndGroup"/>
             <GUI Widget="EndGroup"/>
       </GUIS>

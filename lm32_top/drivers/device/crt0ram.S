@@ -39,10 +39,10 @@
 **  3.9   Apr-29-2014  Fix the branching issue when debug interface is disabled
 **					   Fix the branching issue when remapping EBA
 **
-**  3.8   Apr-15-2011  Added __MICO_USER_<handler>_HANDLER__ preprocessor to 
+**  3.8   Apr-15-2011  Added __MICO_USER_<handler>_HANDLER__ preprocessor to
 **                     allow customers to implement their own handlers for:
 **                     DATA_ABORT, INST_ABORT
-**  
+**
 **  3.1   Jun-18-2008  Added __MICO_NO_INTERRUPTS__ preprocessor
 **                     option to exclude invoking MicoISRHandler
 **                     to reduce code-size in apps that don't use
@@ -78,7 +78,7 @@
  * SUCH DAMAGE.
  */
 
-/* From include/sys/signal.h */  
+/* From include/sys/signal.h */
 #define SIGINT  2   /* interrupt */
 #define SIGTRAP 5   /* trace trap */
 #define SIGFPE  8   /* arithmetic exception */
@@ -86,10 +86,10 @@
 
 /* Exception handlers - Must be 32 bytes long. */
         .section    .boot, "ax", @progbits
-	
-        .global	_start  
-_start: 	
-	
+
+        .global	_start
+_start:
+
         .global _reset_handler
         .type 	_reset_handler, @function
 _reset_handler:
@@ -107,7 +107,7 @@ _reset_handler:
 	calli   _crt0
 	nop
         .size	_reset_handler, .-_reset_handler
-	
+
         .global _breakpoint_handler
         .type 	_breakpoint_handler, @function
 _breakpoint_handler:
@@ -152,7 +152,7 @@ _instruction_bus_error_handler:
 	nop
 #endif
         .size   _instruction_bus_error_handler, .-_instruction_bus_error_handler
-	
+
         .global _watchpoint_handler
         .type 	_watchpoint_handler, @function
 _watchpoint_handler:
@@ -169,7 +169,7 @@ _watchpoint_handler:
 	nop
 	nop
         .size   _watchpoint_handler, .-_watchpoint_handler
-	
+
         .global _data_bus_error_handler
         .type 	_data_bus_error_handler, @function
 _data_bus_error_handler:
@@ -199,7 +199,7 @@ _data_bus_error_handler:
 	nop
 #endif
         .size   _data_bus_error_handler, .-_data_bus_error_handler
-	
+
         .global _divide_by_zero_handler
         .type 	_divide_by_zero_handler, @function
 _divide_by_zero_handler:
@@ -216,7 +216,7 @@ _divide_by_zero_handler:
 	nop
 	nop
         .size   _divide_by_zero_handler, .-_divide_by_zero_handler
-	
+
         .global _interrupt_handler
         .type 	_interrupt_handler, @function
 _interrupt_handler:
@@ -237,7 +237,7 @@ _interrupt_handler:
 	nop
 #endif
         .size   _interrupt_handler, .-_interrupt_handler
-	
+
         .global _system_call_handler
         .type 	_system_call_handler, @function
 _system_call_handler:
@@ -254,10 +254,10 @@ _system_call_handler:
 	nop
 	nop
         .size   _system_call_handler, .-_system_call_handler
-	
+
         .global _crt0
         .type 	_crt0, @function
-_crt0:	
+_crt0:
 	/* Clear r0 */
 	xor     r0, r0, r0
 	/* Setup stack and global pointer */
@@ -265,7 +265,7 @@ _crt0:
 	ori     sp, sp, lo(_fstack)
 	mvhi    gp, hi(_gp)
 	ori     gp, gp, lo(_gp)
-	
+
 	/* Relocate text */
 	mvhi    r1, hi(_ftext)
 	ori     r1, r1, lo(_ftext)
@@ -276,7 +276,7 @@ _crt0:
 	ori     r3, r3, (_etext)
 	calli   _relocate_text
 .L_done_text_relocation:
-        
+
 	/* Relocate read-only data */
 	mvhi    r1, hi(_frodata)
 	ori     r1, r1, lo(_frodata)
@@ -290,8 +290,8 @@ _crt0:
 	mvhi	r4, hi(memcpy)
 	ori	r4, r4, lo(memcpy)
 	call	r4
-.L_done_rodata_relocation:        
-        
+.L_done_rodata_relocation:
+
 	/* Relocate data */
 	mvhi    r1, hi(_fdata)
 	ori     r1, r1, lo(_fdata)
@@ -305,15 +305,15 @@ _crt0:
 	mvhi	r4, hi(memcpy)
 	ori	r4, r4, lo(memcpy)
 	call	r4
-.L_done_data_relocation:        
-        
+.L_done_data_relocation:
+
 	/* Clear BSS */
 	mvhi    r1, hi(_fbss)
 	ori     r1, r1, lo(_fbss)
 	mvhi    r3, hi(_ebss)
 	ori     r3, r3, lo(_ebss)
         .size   _crt0, .-_crt0
-	
+
         .global .ClearBSS
         .type 	.ClearBSS, @function
 .ClearBSS:
@@ -322,7 +322,7 @@ _crt0:
 	addi    r1, r1, 4
 	bi      .ClearBSS
         .size   .ClearBSS, .-.ClearBSS
-	
+
         .global .CallConstructor
         .type 	.CallConstructor, @function
 .CallConstructor:
@@ -344,9 +344,9 @@ _crt0:
 	mvhi	r4, hi(_exit)
 	ori	r4, r4, lo(_exit)
 	call	r4
-	/* Save all registers onto the stack */ 
+	/* Save all registers onto the stack */
         .size   .CallConstructor, .-.CallConstructor
-	
+
 	.global _relocate_text
 	.type 	_relocate_text, @function
 _relocate_text:
@@ -357,7 +357,7 @@ _relocate_text:
 	bne     r1, r3, _relocate_text
 	ret
 	.size	_relocate_text, .-_relocate_text
-	
+
         .global _save_all
         .type 	_save_all, @function
 _save_all:
@@ -416,7 +416,7 @@ _save_all:
 	wcsr    ie, r1
 	ret
         .size  	_save_all, .-_save_all
-	
+
         .global _restore_all_and_return
         .type 	_restore_all_and_return, @function
     /* Restore all registers and return from exception */
@@ -424,14 +424,14 @@ _restore_all_and_return:
 	addi    r1, r0, 2
 	wcsr    ie, r1
 	lw      r1, (sp+4)
-	lw      r2, (sp+8) 
+	lw      r2, (sp+8)
 	lw      r3, (sp+12)
-	lw      r4, (sp+16) 
-	lw      r5, (sp+20) 
-	lw      r6, (sp+24) 
-	lw      r7, (sp+28) 
-	lw      r8, (sp+32) 
-	lw      r9, (sp+36) 
+	lw      r4, (sp+16)
+	lw      r5, (sp+20)
+	lw      r6, (sp+24)
+	lw      r7, (sp+28)
+	lw      r8, (sp+32)
+	lw      r9, (sp+36)
 	lw      r10, (sp+40)
 #ifdef MICO32_FULL_CONTEXT_SAVE_RESTORE
 	lw      r11, (sp+44)

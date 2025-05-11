@@ -23,7 +23,7 @@
  *
  * --------------------------------------------------------------------
  *
- *  Project:           LatticeMico32 
+ *  Project:           LatticeMico32
  *  File:              MicoUtils.c
  *  Description:       C Source code implementation for some utility functions
  *                     that don't require libc (C library) support:
@@ -66,7 +66,7 @@
  * implemented in this file.
  *
  * for Freq (CPU frequency), the number of loops required would be:
- *  loop = Freq/11000; since 
+ *  loop = Freq/11000; since
  * 11 * loop * (1/Freq) = 1msec.
  * Therefore, loop = (Freq * 1msec)/ 11 = Freq / 11000 with frequency
  * in hertz (e.g. 50MHz = 50,000,000)

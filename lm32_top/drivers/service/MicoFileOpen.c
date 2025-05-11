@@ -65,7 +65,7 @@ int _open(const char *file, int flags, int mode)
 
 
     /* extract device-name and file-name from the provided name */
-    GetDeviceName(  dName, MICO_FILE_DEVICES_MAX_DEV_NAME_LEN, 
+    GetDeviceName(  dName, MICO_FILE_DEVICES_MAX_DEV_NAME_LEN,
                     fName, MICO_FILE_DEVICES_MAX_FILE_NAME_LEN,
                     file);
 

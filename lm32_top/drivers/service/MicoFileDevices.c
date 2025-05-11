@@ -169,7 +169,7 @@ void GetDeviceName(char *dName, int iDLimit, char *fName, int iFLimit, const cha
 		/* null-terminate device-name */
 		dName[i] = '\0';
 
-		/* 
+		/*
 		 * See if we exited because we reached the file-marker or
 		 * we reached device-limit
 		 */
@@ -311,7 +311,7 @@ int MicoAllocFDEntry(int *fd, MicoFileDesc_t **pFD)
 void MicoFreeFDEntry(int fd)
 {
 
-    /* 
+    /*
      * Make sure no one's attempting to free the standard stream
      * and that it is within range
      */
@@ -541,7 +541,7 @@ int MicoFileRedirIO(int StreamId, const char *deviceName)
 
 
 
-    /* 
+    /*
      * Since we're opening a standard-stream, the filename is null and
      * special is set to the desired stream-ID
      */
@@ -564,7 +564,7 @@ int MicoFileRedirIO(int StreamId, const char *deviceName)
 
 
 
-    /* 
+    /*
      * since we've replaced the old device with the new device, tell the old device to close this
      * file operator
      */
@@ -573,7 +573,7 @@ int MicoFileRedirIO(int StreamId, const char *deviceName)
 
 
 
-    /* 
+    /*
      * all done
      */
     return(retvalue);

@@ -9,7 +9,7 @@
 #################################################################
 
 #****************************************************************************
-# This makefile builds drivers for non-rtos option and adds that as a 
+# This makefile builds drivers for non-rtos option and adds that as a
 # library-dependency for building the project.  It also provides rule
 # for building the library.
 #****************************************************************************
