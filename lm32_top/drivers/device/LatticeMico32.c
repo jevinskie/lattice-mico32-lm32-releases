@@ -112,5 +112,3 @@ void MicoFlushInstrCache(void)
 {
         asmMicoFlushInstrCache();
 }
-
-

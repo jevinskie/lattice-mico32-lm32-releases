@@ -64,7 +64,7 @@
 /*
  *---------------------------------------------
  * Define _SHRINK_LSCC_PRINTF_SPACE_FMTS_to
- * support precision/width specifier when 
+ * support precision/width specifier when
  * performing printf.  Adds some code ~1kbyte.
  * Default is not defined to match smallC libc
  * output which also doesn't support such
@@ -849,4 +849,3 @@ int LSCC_PUTCHAR(int c)
 	OUTPUT_CHAR((char)c, &data);
 	return(c);
 }
-

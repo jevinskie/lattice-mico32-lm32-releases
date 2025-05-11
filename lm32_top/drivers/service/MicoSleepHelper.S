@@ -23,7 +23,7 @@
  *
  * --------------------------------------------------------------------
  *
- *  Project:           LatticeMico32 
+ *  Project:           LatticeMico32
  *  File:              MicoSleepHelper.S
  *  Description:       C Source code implementation for MicoSleepHelper
  *                     called by MicoSleepMilliSecs and MicoSleepMicroSecs
@@ -35,7 +35,7 @@
  * ---------------------------------------------------------------------------
  * 3.0   Mar-25-2008:   Sync'd version to 3.0 for MSB 7.1 release
  *
- * 1.1   Mar-19-2008:   Updated function implementation to correct for 
+ * 1.1   Mar-19-2008:   Updated function implementation to correct for
  *                      branch-prediction.  branch-prediction no longer
  *                      results in 5 cycles for 1 add and one taken-bne
  *                      hence breaking the function.  The inner loop
@@ -53,9 +53,9 @@ MicoSleepHelper:
     /* .LM2 to .LM3 consists the inner loop;
      * because of branch prediction, be and bi
      * don't take the exact ticks specified in the
-     * processor user guide; so to nullify their 
+     * processor user guide; so to nullify their
      * effect, add a bunch of addi (1-cycle)
-     * to reduce the uncertainty (in lieu of 
+     * to reduce the uncertainty (in lieu of
      * simulating it in RTL)
      */
 .LM2:
@@ -75,4 +75,3 @@ MicoSleepHelper:
 .LM4:
     ret
     .size     MicoSleepHelper, .-MicoSleepHelper
-

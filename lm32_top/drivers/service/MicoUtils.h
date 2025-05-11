@@ -23,7 +23,7 @@
  *
  * --------------------------------------------------------------------
  *
- *  Project:           LatticeMico32 
+ *  Project:           LatticeMico32
  *  File:              MicoUtils.c
  *  Description:       C Source code implementation for some utility functions
  *                     that don't require libc (C library) support:
@@ -92,7 +92,7 @@ void MicoSleepMicroSecs(unsigned int timeInMicroSecs);
  *
  * Note: the time spent in the tight loop is only an
  * approximation and is not very precise.
- * 
+ *
  * If the instruction cache is disabled, this function
  * is highly dependent on memory lattency and will be
  * grossly off than expected.
@@ -106,4 +106,3 @@ void MicoSleepMilliSecs(unsigned int timeInMilliSecs);
 #endif /* __cplusplus */
 
 #endif /*MICO32_MICOUTILS_HEADER_FILE*/
-

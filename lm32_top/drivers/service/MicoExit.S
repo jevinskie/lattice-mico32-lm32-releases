@@ -43,9 +43,9 @@
 *****************************************************************************/
 
 /* System call convention:
-      - System call number in register r8 
+      - System call number in register r8
       - Return value in r1 and r2 (only if 64-bit value)
-      - errno in r3      
+      - errno in r3
 */
 #include <syscall.h>
 
@@ -54,4 +54,3 @@ _exit:
         /* This call doesn't return */
         mvi     r8, SYS_exit
         scall
-

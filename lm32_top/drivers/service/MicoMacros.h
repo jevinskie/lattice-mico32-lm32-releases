@@ -48,7 +48,7 @@
 #ifndef MICO32_MICOMACROS_HEADER_FILE
 #define MICO32_MICOMACROS_HEADER_FILE
 
-/* 
+/*
  * There is a dependency on system-header file for
  * fetching information on the CPU clock as it is
  * needed for the macros in here.
@@ -74,4 +74,3 @@
 
 
 #endif /*MICO32_MICOMACROS_HEADER_FILE */
-

@@ -13,5 +13,3 @@ include_dirs :=	-I$(THAL_ROOT)\th_lite			    	\
 
 
 VPATH = \
-
-

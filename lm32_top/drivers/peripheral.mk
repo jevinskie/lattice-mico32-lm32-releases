@@ -34,4 +34,3 @@ LIBRARY_CXX_SRCS +=
 # application (and not the library)
 #-------------------------------------------------------
 APP_ASM_SRCS+=crt0ram.S
-

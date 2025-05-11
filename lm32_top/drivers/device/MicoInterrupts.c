@@ -42,7 +42,7 @@
 **   DATE        VERSION          DESCRIPTION
 **
 ** Mar-25-2008     3.0       Sync'd version to 3.0 for MicoSystem release 7.1
-** 
+**
 ** Nov 27, 07      1.1       Modified original implementation
 **                           so that im is re-read after servicing
 **                           an interrupt, inside the while(1)
@@ -353,7 +353,7 @@ unsigned int MicoDisableInterrupts(void)
     /* set the interrupt mask to zero */
     asm volatile ("wcsr im, %0"::"r"(0x0));
 
-    /* 
+    /*
      * Don't bother enabling the ie as one of the
      * enable-interrupt instructions will take care
      * of it
@@ -364,4 +364,3 @@ unsigned int MicoDisableInterrupts(void)
 }
 
 #endif
-

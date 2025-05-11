@@ -17,7 +17,7 @@ CPPFLAGS += -D__lm32__
 #*********************************************
 # Add to C-flags
 #*********************************************
-CFLAGS += 
+CFLAGS +=
 
 
 #*********************************************
@@ -50,7 +50,7 @@ CPPFLAGS += $(foreach inc_path, $(INCLUDE_PATH), -I$(inc_path))
 
 
 ###############################################################################
-# BUILD-RULES 
+# BUILD-RULES
 # TODO: ADD CPP RULES AND OTHER RULES...
 ###############################################################################
 # Enhance dependency to include makefiles as well as source-file
@@ -119,4 +119,3 @@ $(OUTPUT_DIR)/%.o: %.s
 # Enhance dependency to include other stuff
 $(OUTPUT_DIR)/%.elf : $(PROJECT_LIBRARY) $(ARCHIVE_OBJS)
 	$(CC) $(CPU_CONFIG) $(LDFLAGS) $(PROJECT_LINKER_SCRIPT) -o $@ $(ARCHIVE_OBJS) $(PROJECT_LIBRARY)
-

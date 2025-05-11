@@ -305,7 +305,7 @@ int LatticeMico32_JTAGFileClose(MicoFileDesc_t *fd)
 
     /*
      *-----------------------------------------------------------------
-     * Standard streams are always open and hence we return success if 
+     * Standard streams are always open and hence we return success if
      * the request is to close a standard stream
      *-----------------------------------------------------------------
      */
@@ -393,6 +393,5 @@ void LatticeMico32_JTAGFileInit(LatticeMico32Ctx_t *pCPU)
     /*
      * all done
      */
-    return; 
+    return;
 }
-

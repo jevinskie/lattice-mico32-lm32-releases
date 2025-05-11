@@ -214,4 +214,3 @@ void *MicoGetNextDev(DevFindCtx_t *FindCtx)
 
     return((void *)0);
 }
-

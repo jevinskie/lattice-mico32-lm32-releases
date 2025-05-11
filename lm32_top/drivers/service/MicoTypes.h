@@ -64,4 +64,3 @@ typedef enum ENUM_MICO_STATUS {
 #endif /* __cplusplus */
 
 #endif
-

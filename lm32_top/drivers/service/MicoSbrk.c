@@ -51,14 +51,14 @@ extern "C" {
 void* _sbrk(ptrdiff_t incr)
 {
    extern char   end; /* Set by linker.  */
-   static char * heap_end; 
-   char *        prev_heap_end; 
+   static char * heap_end;
+   char *        prev_heap_end;
 
    if (heap_end == 0)
-     heap_end = & end; 
+     heap_end = & end;
 
-   prev_heap_end = heap_end; 
-   heap_end += incr; 
+   prev_heap_end = heap_end;
+   heap_end += incr;
 
    return ((void *) prev_heap_end);
 }
@@ -66,4 +66,3 @@ void* _sbrk(ptrdiff_t incr)
 #ifdef __cplusplus
 }
 #endif
-
