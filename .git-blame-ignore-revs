@@ -1,0 +1,5 @@
+# Windows-1252 0x92 => "'"
+e380bef49d98f28b3521fab6ab0bb66be015a829
+
+# ASCIIify, CRLF => LF, trim EOL space
+38569bffa43d70bd4d2ff2492c093477d7187941
