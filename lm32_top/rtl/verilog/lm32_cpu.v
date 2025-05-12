@@ -1265,27 +1265,27 @@ lm32_debug #(
     ----------------------------------------------------------------------*/
    wire [31:0] regfile_data_0, regfile_data_1;
    reg [31:0]  w_result_d;
-   reg 	       regfile_raw_0, regfile_raw_0_nxt;
-   reg 	       regfile_raw_1, regfile_raw_1_nxt;
+   reg         regfile_raw_0, regfile_raw_0_nxt;
+   reg         regfile_raw_1, regfile_raw_1_nxt;
 
    /*----------------------------------------------------------------------
     Check if read and write is being performed to same register in current
     cycle? This is done by comparing the read and write IDXs.
     ----------------------------------------------------------------------*/
    always @(reg_write_enable_q_w or write_idx_w or instruction_f)
-     begin
-	if (reg_write_enable_q_w
-	    && (write_idx_w == instruction_f[25:21]))
-	  regfile_raw_0_nxt = 1'b1;
-	else
-	  regfile_raw_0_nxt = 1'b0;
+    begin
+        if (reg_write_enable_q_w
+            && (write_idx_w == instruction_f[25:21]))
+            regfile_raw_0_nxt = 1'b1;
+        else
+            regfile_raw_0_nxt = 1'b0;
 
-	if (reg_write_enable_q_w
-	    && (write_idx_w == instruction_f[20:16]))
-	  regfile_raw_1_nxt = 1'b1;
-	else
-	  regfile_raw_1_nxt = 1'b0;
-     end
+        if (reg_write_enable_q_w
+            && (write_idx_w == instruction_f[20:16]))
+            regfile_raw_1_nxt = 1'b1;
+        else
+            regfile_raw_1_nxt = 1'b0;
+    end
 
    /*----------------------------------------------------------------------
     Select latched (delayed) write value or data from register file. If
@@ -1313,18 +1313,18 @@ lm32_debug #(
     Latch value written to register file
     ----------------------------------------------------------------------*/
    always @(posedge clk_i `CFG_RESET_SENSITIVITY)
-     if (rst_i == `TRUE)
-       begin
-	  regfile_raw_0 <= #1 1'b0;
-	  regfile_raw_1 <= #1 1'b0;
-	  w_result_d <= #1 32'b0;
-       end
-     else
-       begin
-	  regfile_raw_0 <= #1 regfile_raw_0_nxt;
-	  regfile_raw_1 <= #1 regfile_raw_1_nxt;
-	  w_result_d <= #1 w_result;
-       end
+        if (rst_i == `TRUE)
+        begin
+            regfile_raw_0 <= #1 1'b0;
+            regfile_raw_1 <= #1 1'b0;
+            w_result_d <= #1 32'b0;
+        end
+        else
+        begin
+            regfile_raw_0 <= #1 regfile_raw_0_nxt;
+            regfile_raw_1 <= #1 regfile_raw_1_nxt;
+            w_result_d <= #1 w_result;
+        end
 
    /*----------------------------------------------------------------------
     Register file instantiation as Pseudo-Dual Port EBRs.
@@ -1656,13 +1656,13 @@ assign branch_taken_m =      (stall_m == `FALSE)
                           && (   (   (branch_m == `TRUE)
                                   && (valid_m == `TRUE)
                                   && (   (   (condition_met_m == `TRUE)
-					  && (branch_predict_taken_m == `FALSE)
-					 )
-				      || (   (condition_met_m == `FALSE)
-					  && (branch_predict_m == `TRUE)
-					  && (branch_predict_taken_m == `TRUE)
-					 )
-				     )
+                                          && (branch_predict_taken_m == `FALSE)
+                                         )
+                                      || (   (condition_met_m == `FALSE)
+                                          && (branch_predict_m == `TRUE)
+                                          && (branch_predict_taken_m == `TRUE)
+                                         )
+                                     )
                                  )
                               || (exception_m == `TRUE)
                              );
@@ -1670,26 +1670,26 @@ assign branch_taken_m =      (stall_m == `FALSE)
 // Indicate when a branch in M stage is mispredicted as being taken
 assign branch_mispredict_taken_m =    (condition_met_m == `FALSE)
                                    && (branch_predict_m == `TRUE)
-	   			   && (branch_predict_taken_m == `TRUE);
+                                   && (branch_predict_taken_m == `TRUE);
 
 // Indicate when a branch in M stage will cause flush in X stage
 assign branch_flushX_m =    (stall_m == `FALSE)
                          && (   (   (branch_m == `TRUE)
-                                 && (valid_m == `TRUE)
-			         && (   (condition_met_m == `TRUE)
-				     || (   (condition_met_m == `FALSE)
-					 && (branch_predict_m == `TRUE)
-					 && (branch_predict_taken_m == `TRUE)
-					)
-				    )
-			        )
-			     || (exception_m == `TRUE)
-			    );
+                                    && (valid_m == `TRUE)
+                                    && (   (condition_met_m == `TRUE)
+                                        || ((condition_met_m == `FALSE)
+                                            && (branch_predict_m == `TRUE)
+                                            && (branch_predict_taken_m == `TRUE)
+                                           )
+                                       )
+                                )
+                         || (exception_m == `TRUE)
+                            );
 
 // Generate signal that will kill instructions in each pipeline stage when necessary
 assign kill_f =    (   (valid_d == `TRUE)
                     && (branch_predict_taken_d == `TRUE)
-		   )
+                   )
                 || (branch_taken_m == `TRUE)
 `ifdef CFG_FAST_UNCONDITIONAL_BRANCH
                 || (branch_taken_x == `TRUE)
@@ -1732,10 +1732,10 @@ assign kill_w =    `FALSE
 
 `ifdef CFG_DEBUG_ENABLED
 assign breakpoint_exception =    (   (   (break_x == `TRUE)
-				      || (bp_match == `TRUE)
-				     )
-				  && (valid_x == `TRUE)
-				 )
+                                      || (bp_match == `TRUE)
+                                     )
+                                      && (valid_x == `TRUE)
+                                 )
 `ifdef CFG_JTAG_ENABLED
                               || (jtag_break == `TRUE)
 `endif
@@ -1761,7 +1761,7 @@ assign system_call_exception = (   (scall_x == `TRUE)
 `ifdef CFG_BUS_ERRORS_ENABLED
                                 && (valid_x == `TRUE)
 `endif
-			       );
+                                );
 
 `ifdef CFG_DEBUG_ENABLED
 assign debug_exception_x =  (breakpoint_exception == `TRUE)
@@ -1785,8 +1785,8 @@ assign non_debug_exception_x = (system_call_exception == `TRUE)
                                 && (dc_ss == `FALSE)
 `endif
 `ifdef CFG_BUS_ERRORS_ENABLED
- 				&& (store_q_m == `FALSE)
-				&& (D_CYC_O == `FALSE)
+                                && (store_q_m == `FALSE)
+                                && (D_CYC_O == `FALSE)
 `endif
                                )
 `endif
@@ -1808,8 +1808,8 @@ assign exception_x =           (system_call_exception == `TRUE)
                                 && (dc_ss == `FALSE)
 `endif
 `ifdef CFG_BUS_ERRORS_ENABLED
- 				&& (store_q_m == `FALSE)
-				&& (D_CYC_O == `FALSE)
+                                && (store_q_m == `FALSE)
+                                && (D_CYC_O == `FALSE)
 `endif
                                )
 `endif
@@ -1874,30 +1874,30 @@ assign stall_d =   (stall_x == `TRUE)
                 || (   (interlock == `TRUE)
                     && (kill_d == `FALSE)
                    )
-		|| (   (   (eret_d == `TRUE)
-			|| (scall_d == `TRUE)
-			|| (bus_error_d == `TRUE)
-		       )
-		    && (   (load_q_x == `TRUE)
-			|| (load_q_m == `TRUE)
-			|| (store_q_x == `TRUE)
-			|| (store_q_m == `TRUE)
-			|| (D_CYC_O == `TRUE)
-		       )
+                || (   (   (eret_d == `TRUE)
+                        || (scall_d == `TRUE)
+                        || (bus_error_d == `TRUE)
+                       )
+                    && (   (load_q_x == `TRUE)
+                        || (load_q_m == `TRUE)
+                        || (store_q_x == `TRUE)
+                        || (store_q_m == `TRUE)
+                        || (D_CYC_O == `TRUE)
+                       )
                     && (kill_d == `FALSE)
-		   )
+                   )
 `ifdef CFG_DEBUG_ENABLED
-		|| (   (   (break_d == `TRUE)
-			|| (bret_d == `TRUE)
-		       )
-		    && (   (load_q_x == `TRUE)
-			|| (store_q_x == `TRUE)
-			|| (load_q_m == `TRUE)
-			|| (store_q_m == `TRUE)
-			|| (D_CYC_O == `TRUE)
-		       )
+                || (   (   (break_d == `TRUE)
+                        || (bret_d == `TRUE)
+                       )
+                    && (   (load_q_x == `TRUE)
+                        || (store_q_x == `TRUE)
+                        || (load_q_m == `TRUE)
+                        || (store_q_m == `TRUE)
+                        || (D_CYC_O == `TRUE)
+                       )
                     && (kill_d == `FALSE)
-		   )
+                   )
 `endif
                 || (   (csr_write_enable_d == `TRUE)
                     && (load_q_x == `TRUE)
@@ -1914,10 +1914,10 @@ assign stall_x =    (stall_m == `TRUE)
                  // Stall load/store instruction in D stage if there is an ongoing store
                  // operation to instruction ROM in M stage
                  || (   (irom_stall_request_x == `TRUE)
-		     && (   (load_d == `TRUE)
-			 || (store_d == `TRUE)
-			)
-		    )
+                     && (   (load_d == `TRUE)
+                         || (store_d == `TRUE)
+                        )
+                    )
 `endif
                  ;
 
@@ -1927,20 +1927,20 @@ assign stall_m =    (stall_wb_load == `TRUE)
 `else
                  || (   (D_CYC_O == `TRUE)
                      && (   (store_m == `TRUE)
-		         /*
-			  Bug: Following loop does not allow interrupts to be services since
-			  either D_CYC_O or store_m is always high during entire duration of
-			  loop.
-		          L1:	addi	r1, r1, 1
-			  	sw	(r2,0), r1
-			  	bi	L1
+                 /*
+              Bug: Following loop does not allow interrupts to be services since
+              either D_CYC_O or store_m is always high during entire duration of
+              loop.
+                  L1:   addi    r1, r1, 1
+                sw  (r2,0), r1
+                bi  L1
 
-			  Introduce a single-cycle stall when a wishbone cycle is in progress
-			  and a new store instruction is in Execute stage and a interrupt
-			  exception has occured. This stall will ensure that D_CYC_O and
-			  store_m will both be low for one cycle.
-			  */
-		         || ((store_x == `TRUE) && (interrupt_exception == `TRUE))
+              Introduce a single-cycle stall when a wishbone cycle is in progress
+              and a new store instruction is in Execute stage and a interrupt
+              exception has occured. This stall will ensure that D_CYC_O and
+              store_m will both be low for one cycle.
+              */
+                 || ((store_x == `TRUE) && (interrupt_exception == `TRUE))
                          || (load_m == `TRUE)
                          || (load_x == `TRUE)
                         )
@@ -2085,18 +2085,18 @@ assign cfg = {
               };
 
 assign cfg2 = {
-		     30'b0,
+             30'b0,
 `ifdef CFG_IROM_ENABLED
-		     `TRUE,
+             `TRUE,
 `else
-		     `FALSE,
+             `FALSE,
 `endif
 `ifdef CFG_DRAM_ENABLED
-		     `TRUE
+             `TRUE
 `else
-		     `FALSE
+             `FALSE
 `endif
-		     };
+             };
 
 // Cache flush
 `ifdef CFG_ICACHE_ENABLED
@@ -2321,7 +2321,7 @@ begin
 `ifdef CFG_SIGN_EXTEND_ENABLED
         x_result_sel_sext_x <= #1 `FALSE;
 `endif
-	x_result_sel_logic_x <= #1 `FALSE;
+    x_result_sel_logic_x <= #1 `FALSE;
 `ifdef CFG_USER_ENABLED
         x_result_sel_user_x <= #1 `FALSE;
 `endif
@@ -2383,7 +2383,7 @@ begin
         m_bypass_enable_m <= #1 `FALSE;
         branch_m <= #1 `FALSE;
         branch_predict_m <= #1 `FALSE;
-	branch_predict_taken_m <= #1 `FALSE;
+    branch_predict_taken_m <= #1 `FALSE;
         exception_m <= #1 `FALSE;
         load_m <= #1 `FALSE;
         store_m <= #1 `FALSE;
@@ -2437,7 +2437,7 @@ begin
 `ifdef CFG_SIGN_EXTEND_ENABLED
             x_result_sel_sext_x <= #1 x_result_sel_sext_d;
 `endif
-	    x_result_sel_logic_x <= #1 x_result_sel_logic_d;
+        x_result_sel_logic_x <= #1 x_result_sel_logic_d;
 `ifdef CFG_USER_ENABLED
             x_result_sel_user_x <= #1 x_result_sel_user_d;
 `endif
@@ -2455,9 +2455,9 @@ begin
             load_x <= #1 load_d;
             store_x <= #1 store_d;
             branch_x <= #1 branch_d;
-	    branch_predict_x <= #1 branch_predict_d;
-	    branch_predict_taken_x <= #1 branch_predict_taken_d;
-	    write_idx_x <= #1 write_idx_d;
+        branch_predict_x <= #1 branch_predict_d;
+        branch_predict_taken_x <= #1 branch_predict_taken_d;
+        write_idx_x <= #1 write_idx_d;
             csr_x <= #1 csr_d;
             size_x <= #1 size_d;
             sign_extend_x <= #1 sign_extend_d;
@@ -2518,15 +2518,15 @@ begin
             branch_m <= #1 branch_x && !branch_taken_x;
 `else
             branch_m <= #1 branch_x;
-	    branch_predict_m <= #1 branch_predict_x;
-	    branch_predict_taken_m <= #1 branch_predict_taken_x;
+        branch_predict_m <= #1 branch_predict_x;
+        branch_predict_taken_m <= #1 branch_predict_taken_x;
 `endif
 `ifdef CFG_DEBUG_ENABLED
-	   // Data bus errors are generated by the wishbone and are
-	   // made known to the processor only in next cycle (as a
-	   // non-debug exception). A break instruction can be seen
-	   // in same cycle (causing a debug exception). Handle non
-	   // -debug exception first!
+       // Data bus errors are generated by the wishbone and are
+       // made known to the processor only in next cycle (as a
+       // non-debug exception). A break instruction can be seen
+       // in same cycle (causing a debug exception). Handle non
+       // -debug exception first!
             if (non_debug_exception_x == `TRUE)
                 write_idx_m <= #1 `LM32_EA_REG;
             else if (debug_exception_x == `TRUE)
@@ -2541,18 +2541,18 @@ begin
 `endif
             condition_met_m <= #1 condition_met_x;
 `ifdef CFG_DEBUG_ENABLED
-	   if (exception_x == `TRUE)
-	     if ((dc_re == `TRUE)
+       if (exception_x == `TRUE)
+         if ((dc_re == `TRUE)
  `ifdef CFG_ALTERNATE_EBA
-		 || (at_debug == `TRUE)
+         || (at_debug == `TRUE)
  `endif
-		 || ((debug_exception_x == `TRUE)
-		     && (non_debug_exception_x == `FALSE)))
-	       branch_target_m <= #1 {deba, eid_x, {3{1'b0}}};
-	     else
-	       branch_target_m <= #1 {eba, eid_x, {3{1'b0}}};
-	   else
-	     branch_target_m <= #1 branch_target_x;
+         || ((debug_exception_x == `TRUE)
+             && (non_debug_exception_x == `FALSE)))
+           branch_target_m <= #1 {deba, eid_x, {3{1'b0}}};
+         else
+           branch_target_m <= #1 {eba, eid_x, {3{1'b0}}};
+       else
+         branch_target_m <= #1 branch_target_x;
 `else
             branch_target_m <= #1 exception_x == `TRUE ? {eba, eid_x, {3{1'b0}}} : branch_target_x;
 `endif
@@ -2581,13 +2581,13 @@ begin
             else
                 exception_m <= #1 `FALSE;
 `ifdef CFG_BUS_ERRORS_ENABLED
-	   data_bus_error_exception_m <= #1    (data_bus_error_exception == `TRUE)
+       data_bus_error_exception_m <= #1    (data_bus_error_exception == `TRUE)
 `ifdef CFG_DEBUG_ENABLED
-					 && (reset_exception == `FALSE)
+                     && (reset_exception == `FALSE)
 `endif
-					 ;
+                     ;
 `endif
-	end
+    end
 
         // M/W stage registers
 `ifdef CFG_BUS_ERRORS_ENABLED
@@ -2616,11 +2616,11 @@ begin
 `endif
 `ifdef CFG_BUS_ERRORS_ENABLED
         if (   (stall_m == `FALSE)
-	    && (data_bus_error_exception == `FALSE)
+        && (data_bus_error_exception == `FALSE)
             && (   (load_q_m == `TRUE)
                 || (store_q_m == `TRUE)
                )
-	   )
+       )
           memop_pc_w <= #1 pc_m;
 `endif
     end
