@@ -587,31 +587,31 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 `ifdef CFG_DEBUG_ENABLED
  `ifdef CFG_ALTERNATE_EBA
 	  if (at_debug == `TRUE)
-	    pc_f <= #1 (`CFG_DEBA_RESET-4)/4;
+	    pc_f <= `D (`CFG_DEBA_RESET-4)/4;
 	  else
-	    pc_f <= #1 (`CFG_EBA_RESET-4)/4;
+	    pc_f <= `D (`CFG_EBA_RESET-4)/4;
  `else
-	  pc_f <= #1 (`CFG_EBA_RESET-4)/4;
+	  pc_f <= `D (`CFG_EBA_RESET-4)/4;
  `endif
 `else
-          pc_f <= #1 (`CFG_EBA_RESET-4)/4;
+          pc_f <= `D (`CFG_EBA_RESET-4)/4;
 `endif
-          pc_d <= #1 {`LM32_PC_WIDTH{1'b0}};
-          pc_x <= #1 {`LM32_PC_WIDTH{1'b0}};
-          pc_m <= #1 {`LM32_PC_WIDTH{1'b0}};
-          pc_w <= #1 {`LM32_PC_WIDTH{1'b0}};
+          pc_d <= `D {`LM32_PC_WIDTH{1'b0}};
+          pc_x <= `D {`LM32_PC_WIDTH{1'b0}};
+          pc_m <= `D {`LM32_PC_WIDTH{1'b0}};
+          pc_w <= `D {`LM32_PC_WIDTH{1'b0}};
        end
      else
        begin
           if (stall_f == `FALSE)
-            pc_f <= #1 pc_a;
+            pc_f <= `D pc_a;
           if (stall_d == `FALSE)
-            pc_d <= #1 pc_f;
+            pc_d <= `D pc_f;
           if (stall_x == `FALSE)
-            pc_x <= #1 pc_d;
+            pc_x <= `D pc_d;
           if (stall_m == `FALSE)
-            pc_m <= #1 pc_x;
-          pc_w <= #1 pc_m;
+            pc_m <= `D pc_x;
+          pc_w <= `D pc_m;
        end
   end
 
@@ -620,24 +620,24 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        restart_address <= #1 {`LM32_PC_WIDTH{1'b0}};
+        restart_address <= `D {`LM32_PC_WIDTH{1'b0}};
     else
     begin
 `ifdef CFG_DCACHE_ENABLED
 `ifdef CFG_ICACHE_ENABLED
             // D-cache restart address must take priority, otherwise instructions will be lost
             if (dcache_refill_request == `TRUE)
-                restart_address <= #1 pc_w;
+                restart_address <= `D pc_w;
             else if ((icache_refill_request == `TRUE) && (!dcache_refilling) && (!dcache_restart_request))
-                restart_address <= #1 icache_refill_address;
+                restart_address <= `D icache_refill_address;
 `else
             if (dcache_refill_request == `TRUE)
-                restart_address <= #1 pc_w;
+                restart_address <= `D pc_w;
 `endif
 `else
 `ifdef CFG_ICACHE_ENABLED
             if (icache_refill_request == `TRUE)
-                restart_address <= #1 icache_refill_address;
+                restart_address <= `D icache_refill_address;
 `endif
 `endif
     end
@@ -649,11 +649,11 @@ end
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        irom_select_f <= #1 `FALSE;
+        irom_select_f <= `D `FALSE;
     else
     begin
         if (stall_f == `FALSE)
-            irom_select_f <= #1 irom_select_a;
+            irom_select_f <= `D irom_select_a;
     end
 end
 `endif
@@ -678,25 +678,25 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        i_cyc_o <= #1 `FALSE;
-        i_stb_o <= #1 `FALSE;
-        i_adr_o <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        i_cti_o <= #1 `LM32_CTYPE_END;
-        i_lock_o <= #1 `FALSE;
-        icache_refill_data <= #1 {`LM32_INSTRUCTION_WIDTH{1'b0}};
-        icache_refill_ready <= #1 `FALSE;
+        i_cyc_o <= `D `FALSE;
+        i_stb_o <= `D `FALSE;
+        i_adr_o <= `D {`LM32_WORD_WIDTH{1'b0}};
+        i_cti_o <= `D `LM32_CTYPE_END;
+        i_lock_o <= `D `FALSE;
+        icache_refill_data <= `D {`LM32_INSTRUCTION_WIDTH{1'b0}};
+        icache_refill_ready <= `D `FALSE;
 `ifdef CFG_BUS_ERRORS_ENABLED
-        bus_error_f <= #1 `FALSE;
+        bus_error_f <= `D `FALSE;
 `endif
 `ifdef CFG_HW_DEBUG_ENABLED
-        i_we_o <= #1 `FALSE;
-        i_sel_o <= #1 4'b1111;
-        jtag_access <= #1 `FALSE;
+        i_we_o <= `D `FALSE;
+        i_sel_o <= `D 4'b1111;
+        jtag_access <= `D `FALSE;
 `endif
     end
     else
     begin
-        icache_refill_ready <= #1 `FALSE;
+        icache_refill_ready <= `D `FALSE;
         // Is a cycle in progress?
         if (i_cyc_o == `TRUE)
         begin
@@ -706,10 +706,10 @@ begin
 `ifdef CFG_HW_DEBUG_ENABLED
                 if (jtag_access == `TRUE)
                 begin
-                    i_cyc_o <= #1 `FALSE;
-                    i_stb_o <= #1 `FALSE;
-                    i_we_o <= #1 `FALSE;
-                    jtag_access <= #1 `FALSE;
+                    i_cyc_o <= `D `FALSE;
+                    i_stb_o <= `D `FALSE;
+                    i_we_o <= `D `FALSE;
+                    jtag_access <= `D `FALSE;
                 end
                 else
 `endif
@@ -717,22 +717,22 @@ begin
                     if (last_word == `TRUE)
                     begin
                         // Cache line fill complete
-                        i_cyc_o <= #1 `FALSE;
-                        i_stb_o <= #1 `FALSE;
-                        i_lock_o <= #1 `FALSE;
+                        i_cyc_o <= `D `FALSE;
+                        i_stb_o <= `D `FALSE;
+                        i_lock_o <= `D `FALSE;
                     end
                     // Fetch next word in cache line
-                    i_adr_o[addr_offset_msb:addr_offset_lsb] <= #1 i_adr_o[addr_offset_msb:addr_offset_lsb] + 1'b1;
-                    i_cti_o <= #1 next_cycle_type;
+                    i_adr_o[addr_offset_msb:addr_offset_lsb] <= `D i_adr_o[addr_offset_msb:addr_offset_lsb] + 1'b1;
+                    i_cti_o <= `D next_cycle_type;
                     // Write fetched data into instruction cache
-                    icache_refill_ready <= #1 `TRUE;
-                    icache_refill_data <= #1 i_dat_i;
+                    icache_refill_ready <= `D `TRUE;
+                    icache_refill_data <= `D i_dat_i;
                 end
             end
 `ifdef CFG_BUS_ERRORS_ENABLED
             if (i_err_i == `TRUE)
             begin
-                bus_error_f <= #1 `TRUE;
+                bus_error_f <= `D `TRUE;
                 $display ("Instruction bus error. Address: %x", i_adr_o);
             end
 `endif
@@ -743,15 +743,15 @@ begin
             begin
                 // Read first word of cache line
 `ifdef CFG_HW_DEBUG_ENABLED
-                i_sel_o <= #1 4'b1111;
+                i_sel_o <= `D 4'b1111;
 `endif
-                i_adr_o <= #1 {first_address, 2'b00};
-                i_cyc_o <= #1 `TRUE;
-                i_stb_o <= #1 `TRUE;
-                i_cti_o <= #1 first_cycle_type;
-                //i_lock_o <= #1 `TRUE;
+                i_adr_o <= `D {first_address, 2'b00};
+                i_cyc_o <= `D `TRUE;
+                i_stb_o <= `D `TRUE;
+                i_cti_o <= `D first_cycle_type;
+                //i_lock_o <= `D `TRUE;
 `ifdef CFG_BUS_ERRORS_ENABLED
-                bus_error_f <= #1 `FALSE;
+                bus_error_f <= `D `FALSE;
 `endif
             end
 `ifdef CFG_HW_DEBUG_ENABLED
@@ -760,18 +760,18 @@ begin
                 if ((jtag_read_enable == `TRUE) || (jtag_write_enable == `TRUE))
                 begin
                     case (jtag_address[1:0])
-                    2'b00: i_sel_o <= #1 4'b1000;
-                    2'b01: i_sel_o <= #1 4'b0100;
-                    2'b10: i_sel_o <= #1 4'b0010;
-                    2'b11: i_sel_o <= #1 4'b0001;
+                    2'b00: i_sel_o <= `D 4'b1000;
+                    2'b01: i_sel_o <= `D 4'b0100;
+                    2'b10: i_sel_o <= `D 4'b0010;
+                    2'b11: i_sel_o <= `D 4'b0001;
                     endcase
-                    i_adr_o <= #1 jtag_address;
-                    i_dat_o <= #1 {4{jtag_write_data}};
-                    i_cyc_o <= #1 `TRUE;
-                    i_stb_o <= #1 `TRUE;
-                    i_we_o <= #1 jtag_write_enable;
-                    i_cti_o <= #1 `LM32_CTYPE_END;
-                    jtag_access <= #1 `TRUE;
+                    i_adr_o <= `D jtag_address;
+                    i_dat_o <= `D {4{jtag_write_data}};
+                    i_cyc_o <= `D `TRUE;
+                    i_stb_o <= `D `TRUE;
+                    i_we_o <= `D jtag_write_enable;
+                    i_cti_o <= `D `LM32_CTYPE_END;
+                    jtag_access <= `D `TRUE;
                 end
             end
 `endif
@@ -780,10 +780,10 @@ begin
             // continually generated if exception handler is cached
 `ifdef CFG_FAST_UNCONDITIONAL_BRANCH
             if (branch_taken_x == `TRUE)
-                bus_error_f <= #1 `FALSE;
+                bus_error_f <= `D `FALSE;
 `endif
             if (branch_taken_m == `TRUE)
-                bus_error_f <= #1 `FALSE;
+                bus_error_f <= `D `FALSE;
 `endif
         end
     end
@@ -793,14 +793,14 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        i_cyc_o <= #1 `FALSE;
-        i_stb_o <= #1 `FALSE;
-        i_adr_o <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        i_cti_o <= #1 `LM32_CTYPE_END;
-        i_lock_o <= #1 `FALSE;
-        wb_data_f <= #1 {`LM32_INSTRUCTION_WIDTH{1'b0}};
+        i_cyc_o <= `D `FALSE;
+        i_stb_o <= `D `FALSE;
+        i_adr_o <= `D {`LM32_WORD_WIDTH{1'b0}};
+        i_cti_o <= `D `LM32_CTYPE_END;
+        i_lock_o <= `D `FALSE;
+        wb_data_f <= `D {`LM32_INSTRUCTION_WIDTH{1'b0}};
 `ifdef CFG_BUS_ERRORS_ENABLED
-        bus_error_f <= #1 `FALSE;
+        bus_error_f <= `D `FALSE;
 `endif
     end
     else
@@ -812,15 +812,15 @@ begin
             if((i_ack_i == `TRUE) || (i_err_i == `TRUE))
             begin
                 // Cycle complete
-                i_cyc_o <= #1 `FALSE;
-                i_stb_o <= #1 `FALSE;
+                i_cyc_o <= `D `FALSE;
+                i_stb_o <= `D `FALSE;
                 // Register fetched instruction
-                wb_data_f <= #1 i_dat_i;
+                wb_data_f <= `D i_dat_i;
             end
 `ifdef CFG_BUS_ERRORS_ENABLED
             if (i_err_i == `TRUE)
             begin
-                bus_error_f <= #1 `TRUE;
+                bus_error_f <= `D `TRUE;
                 $display ("Instruction bus error. Address: %x", i_adr_o);
             end
 `endif
@@ -836,13 +836,13 @@ begin
             begin
                 // Fetch instruction
 `ifdef CFG_HW_DEBUG_ENABLED
-                i_sel_o <= #1 4'b1111;
+                i_sel_o <= `D 4'b1111;
 `endif
-                i_adr_o <= #1 {pc_a, 2'b00};
-                i_cyc_o <= #1 `TRUE;
-                i_stb_o <= #1 `TRUE;
+                i_adr_o <= `D {pc_a, 2'b00};
+                i_cyc_o <= `D `TRUE;
+                i_stb_o <= `D `TRUE;
 `ifdef CFG_BUS_ERRORS_ENABLED
-                bus_error_f <= #1 `FALSE;
+                bus_error_f <= `D `FALSE;
 `endif
             end
 	    else
@@ -854,7 +854,7 @@ begin
 	           )
 		begin
 `ifdef CFG_BUS_ERRORS_ENABLED
-		    bus_error_f <= #1 `FALSE;
+		    bus_error_f <= `D `FALSE;
 `endif
 		end
 	    end
@@ -869,18 +869,18 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        instruction_d <= #1 {`LM32_INSTRUCTION_WIDTH{1'b0}};
+        instruction_d <= `D {`LM32_INSTRUCTION_WIDTH{1'b0}};
 `ifdef CFG_BUS_ERRORS_ENABLED
-        bus_error_d <= #1 `FALSE;
+        bus_error_d <= `D `FALSE;
 `endif
     end
     else
     begin
         if (stall_d == `FALSE)
         begin
-            instruction_d <= #1 instruction_f;
+            instruction_d <= `D instruction_f;
 `ifdef CFG_BUS_ERRORS_ENABLED
-            bus_error_d <= #1 bus_error_f;
+            bus_error_d <= `D bus_error_f;
 `endif
         end
     end

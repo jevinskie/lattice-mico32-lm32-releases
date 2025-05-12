@@ -191,13 +191,13 @@ module lm32_ram
 		always @(posedge read_clk)
 		  if (reset)
 		    begin
-		       raw_data <= #1 0;
-		       raw <= #1 1'b0;
+		       raw_data <= `D 0;
+		       raw <= `D 1'b0;
 		    end
 		  else
 		    begin
-		       raw_data <= #1 raw_data_nxt;
-		       raw <= #1 raw_nxt;
+		       raw_data <= `D raw_data_nxt;
+		       raw <= `D raw_nxt;
 		    end
 
 		pmi_ram_dp_true
@@ -273,7 +273,7 @@ module lm32_ram
 
 	     always @(posedge read_clk)
 	       if (enable_read)
-		 ra <= #1 read_address;
+		 ra <= `D read_address;
 	  end
 
 	else
@@ -296,12 +296,12 @@ module lm32_ram
 	     // Write port
 	     always @(posedge write_clk)
 	       if ((write_enable == `TRUE) && (enable_write == `TRUE))
-		 mem[write_address] <= #1 write_data;
+		 mem[write_address] <= `D write_data;
 
 	     // Register read address for use on next cycle
 	     always @(posedge read_clk)
 	       if (enable_read)
-		 ra <= #1 read_address;
+		 ra <= `D read_address;
 
 	  end
 

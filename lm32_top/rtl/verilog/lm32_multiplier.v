@@ -99,21 +99,21 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        muliplicand <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        multiplier <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        product <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        result <= #1 {`LM32_WORD_WIDTH{1'b0}};
+        muliplicand <= `D {`LM32_WORD_WIDTH{1'b0}};
+        multiplier <= `D {`LM32_WORD_WIDTH{1'b0}};
+        product <= `D {`LM32_WORD_WIDTH{1'b0}};
+        result <= `D {`LM32_WORD_WIDTH{1'b0}};
     end
     else
     begin
         if (stall_x == `FALSE)
         begin
-            muliplicand <= #1 operand_0;
-            multiplier <= #1 operand_1;
+            muliplicand <= `D operand_0;
+            multiplier <= `D operand_1;
         end
         if (stall_m == `FALSE)
-            product <= #1 muliplicand * multiplier;
-        result <= #1 product;
+            product <= `D muliplicand * multiplier;
+        result <= `D product;
     end
 end
 

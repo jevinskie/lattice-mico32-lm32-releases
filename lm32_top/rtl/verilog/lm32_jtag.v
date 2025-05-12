@@ -274,9 +274,9 @@ module lm32_jtag
    always @(negedge jtag_update `CFG_RESET_SENSITIVITY)
      begin
 	if (rst_i == `TRUE)
-	  rx_toggle <= #1 1'b0;
+	  rx_toggle <= `D 1'b0;
 	else
-	  rx_toggle <= #1 ~rx_toggle;
+	  rx_toggle <= `D ~rx_toggle;
      end
 
    always @(*)
@@ -293,15 +293,15 @@ module lm32_jtag
      begin
 	if (rst_i == `TRUE)
 	  begin
-             rx_toggle_r <= #1 1'b0;
-             rx_toggle_r_r <= #1 1'b0;
-             rx_toggle_r_r_r <= #1 1'b0;
+             rx_toggle_r <= `D 1'b0;
+             rx_toggle_r_r <= `D 1'b0;
+             rx_toggle_r_r_r <= `D 1'b0;
 	  end
 	else
 	  begin
-             rx_toggle_r <= #1 rx_toggle;
-             rx_toggle_r_r <= #1 rx_toggle_r;
-             rx_toggle_r_r_r <= #1 rx_toggle_r_r;
+             rx_toggle_r <= `D rx_toggle;
+             rx_toggle_r_r <= `D rx_toggle_r;
+             rx_toggle_r_r_r <= `D rx_toggle_r_r;
 	  end
      end
 
@@ -310,28 +310,28 @@ module lm32_jtag
      begin
 	if (rst_i == `TRUE)
 	  begin
-             state <= #1 `LM32_JTAG_STATE_READ_COMMAND;
-             command <= #1 4'b0000;
-             jtag_reg_d <= #1 8'h00;
+             state <= `D `LM32_JTAG_STATE_READ_COMMAND;
+             command <= `D 4'b0000;
+             jtag_reg_d <= `D 8'h00;
 `ifdef CFG_HW_DEBUG_ENABLED
-             processing <= #1 `FALSE;
-             jtag_csr_write_enable <= #1 `FALSE;
-             jtag_read_enable <= #1 `FALSE;
-             jtag_write_enable <= #1 `FALSE;
+             processing <= `D `FALSE;
+             jtag_csr_write_enable <= `D `FALSE;
+             jtag_read_enable <= `D `FALSE;
+             jtag_write_enable <= `D `FALSE;
 `endif
 `ifdef CFG_DEBUG_ENABLED
-             jtag_break <= #1 `FALSE;
-             jtag_reset <= #1 `FALSE;
+             jtag_break <= `D `FALSE;
+             jtag_reset <= `D `FALSE;
 `endif
 `ifdef CFG_JTAG_UART_ENABLED
-             uart_tx_byte <= #1 8'h00;
-             uart_tx_valid <= #1 `FALSE;
-             uart_rx_byte <= #1 8'h00;
-             uart_rx_valid <= #1 `FALSE;
+             uart_tx_byte <= `D 8'h00;
+             uart_tx_valid <= `D `FALSE;
+             uart_rx_byte <= `D 8'h00;
+             uart_rx_valid <= `D `FALSE;
  `ifdef CFG_FAST_DOWNLOAD_ENABLED
-	     uart_rx_fifo <= #1 0;
-	     uart_rx_fifo_ptr <= #1 0;
-	     uart_rx_fifo_transaction <= #1 0;
+	     uart_rx_fifo <= `D 0;
+	     uart_rx_fifo_ptr <= `D 0;
+	     uart_rx_fifo_transaction <= `D 0;
  `endif
 `endif
 	  end
@@ -344,8 +344,8 @@ module lm32_jtag
 		    `LM32_CSR_JTX:
 		      begin
 			 // Set flag indicating data is available
-			 uart_tx_byte <= #1 csr_write_data[`LM32_BYTE_0_RNG];
-			 uart_tx_valid <= #1 `TRUE;
+			 uart_tx_byte <= `D csr_write_data[`LM32_BYTE_0_RNG];
+			 uart_tx_valid <= `D `TRUE;
 		      end
 		    `LM32_CSR_JRX:
 		      begin
@@ -354,57 +354,57 @@ module lm32_jtag
 			 if (uart_rx_fifo_transaction)
 			   begin
 			      case (uart_rx_fifo_ptr)
-				// 5'h00: uart_rx_byte <= #1 uart_rx_fifo[  7:  0];
-				5'h00: uart_rx_byte <= #1 uart_rx_fifo[ 15:  8];
-				5'h01: uart_rx_byte <= #1 uart_rx_fifo[ 23: 16];
-				5'h02: uart_rx_byte <= #1 uart_rx_fifo[ 31: 24];
-				5'h03: uart_rx_byte <= #1 uart_rx_fifo[ 39: 32];
-				5'h04: uart_rx_byte <= #1 uart_rx_fifo[ 47: 40];
-				5'h05: uart_rx_byte <= #1 uart_rx_fifo[ 55: 48];
-				5'h06: uart_rx_byte <= #1 uart_rx_fifo[ 63: 56];
-				5'h07: uart_rx_byte <= #1 uart_rx_fifo[ 71: 64];
-				5'h08: uart_rx_byte <= #1 uart_rx_fifo[ 79: 72];
-				5'h09: uart_rx_byte <= #1 uart_rx_fifo[ 87: 80];
-				5'h0A: uart_rx_byte <= #1 uart_rx_fifo[ 95: 88];
-				5'h0B: uart_rx_byte <= #1 uart_rx_fifo[103: 96];
-				5'h0C: uart_rx_byte <= #1 uart_rx_fifo[111:104];
-				5'h0D: uart_rx_byte <= #1 uart_rx_fifo[119:112];
-				5'h0E: uart_rx_byte <= #1 uart_rx_fifo[127:120];
+				// 5'h00: uart_rx_byte <= `D uart_rx_fifo[  7:  0];
+				5'h00: uart_rx_byte <= `D uart_rx_fifo[ 15:  8];
+				5'h01: uart_rx_byte <= `D uart_rx_fifo[ 23: 16];
+				5'h02: uart_rx_byte <= `D uart_rx_fifo[ 31: 24];
+				5'h03: uart_rx_byte <= `D uart_rx_fifo[ 39: 32];
+				5'h04: uart_rx_byte <= `D uart_rx_fifo[ 47: 40];
+				5'h05: uart_rx_byte <= `D uart_rx_fifo[ 55: 48];
+				5'h06: uart_rx_byte <= `D uart_rx_fifo[ 63: 56];
+				5'h07: uart_rx_byte <= `D uart_rx_fifo[ 71: 64];
+				5'h08: uart_rx_byte <= `D uart_rx_fifo[ 79: 72];
+				5'h09: uart_rx_byte <= `D uart_rx_fifo[ 87: 80];
+				5'h0A: uart_rx_byte <= `D uart_rx_fifo[ 95: 88];
+				5'h0B: uart_rx_byte <= `D uart_rx_fifo[103: 96];
+				5'h0C: uart_rx_byte <= `D uart_rx_fifo[111:104];
+				5'h0D: uart_rx_byte <= `D uart_rx_fifo[119:112];
+				5'h0E: uart_rx_byte <= `D uart_rx_fifo[127:120];
  `ifdef DOWNLOAD_BUFFER_SIZE_256
-				5'h0F: uart_rx_byte <= #1 uart_rx_fifo[135:128];
-				5'h10: uart_rx_byte <= #1 uart_rx_fifo[143:136];
-				5'h11: uart_rx_byte <= #1 uart_rx_fifo[151:144];
-				5'h12: uart_rx_byte <= #1 uart_rx_fifo[159:152];
-				5'h13: uart_rx_byte <= #1 uart_rx_fifo[167:160];
-				5'h14: uart_rx_byte <= #1 uart_rx_fifo[175:168];
-				5'h15: uart_rx_byte <= #1 uart_rx_fifo[183:176];
-				5'h16: uart_rx_byte <= #1 uart_rx_fifo[191:184];
-				5'h17: uart_rx_byte <= #1 uart_rx_fifo[199:192];
-				5'h18: uart_rx_byte <= #1 uart_rx_fifo[207:200];
-				5'h19: uart_rx_byte <= #1 uart_rx_fifo[215:208];
-				5'h1A: uart_rx_byte <= #1 uart_rx_fifo[223:216];
-				5'h1B: uart_rx_byte <= #1 uart_rx_fifo[231:224];
-				5'h1C: uart_rx_byte <= #1 uart_rx_fifo[239:232];
-				5'h1D: uart_rx_byte <= #1 uart_rx_fifo[247:240];
-				5'h1E: uart_rx_byte <= #1 uart_rx_fifo[255:248];
+				5'h0F: uart_rx_byte <= `D uart_rx_fifo[135:128];
+				5'h10: uart_rx_byte <= `D uart_rx_fifo[143:136];
+				5'h11: uart_rx_byte <= `D uart_rx_fifo[151:144];
+				5'h12: uart_rx_byte <= `D uart_rx_fifo[159:152];
+				5'h13: uart_rx_byte <= `D uart_rx_fifo[167:160];
+				5'h14: uart_rx_byte <= `D uart_rx_fifo[175:168];
+				5'h15: uart_rx_byte <= `D uart_rx_fifo[183:176];
+				5'h16: uart_rx_byte <= `D uart_rx_fifo[191:184];
+				5'h17: uart_rx_byte <= `D uart_rx_fifo[199:192];
+				5'h18: uart_rx_byte <= `D uart_rx_fifo[207:200];
+				5'h19: uart_rx_byte <= `D uart_rx_fifo[215:208];
+				5'h1A: uart_rx_byte <= `D uart_rx_fifo[223:216];
+				5'h1B: uart_rx_byte <= `D uart_rx_fifo[231:224];
+				5'h1C: uart_rx_byte <= `D uart_rx_fifo[239:232];
+				5'h1D: uart_rx_byte <= `D uart_rx_fifo[247:240];
+				5'h1E: uart_rx_byte <= `D uart_rx_fifo[255:248];
  `endif
 				default:
 				  uart_rx_byte <= 8'h00;
 			      endcase
-			      uart_rx_fifo_ptr <= #1 uart_rx_fifo_ptr + 1'b1;
+			      uart_rx_fifo_ptr <= `D uart_rx_fifo_ptr + 1'b1;
 `ifdef DOWNLOAD_BUFFER_SIZE_256
 			      if (uart_rx_fifo_ptr == 5'h1F)
 `else
 			      if (uart_rx_fifo_ptr == 5'h0F)
 `endif
 				begin
-				   uart_rx_fifo_transaction <= #1 `FALSE;
-				   uart_rx_valid <= #1 `FALSE;
+				   uart_rx_fifo_transaction <= `D `FALSE;
+				   uart_rx_valid <= `D `FALSE;
 				end
 			   end
 			 else
 `endif
-			   uart_rx_valid <= #1 `FALSE;
+			   uart_rx_valid <= `D `FALSE;
 		      end
 		  endcase
                end
@@ -413,8 +413,8 @@ module lm32_jtag
              // When an exception has occured, clear the requests
              if (exception_q_w == `TRUE)
                begin
-		  jtag_break <= #1 `FALSE;
-		  jtag_reset <= #1 `FALSE;
+		  jtag_break <= `D `FALSE;
+		  jtag_reset <= `D `FALSE;
                end
 `endif
              case (state)
@@ -423,7 +423,7 @@ module lm32_jtag
 		    // Wait for rx register to toggle which indicates new data is available
 		    if (rx_toggle_r_r != rx_toggle_r_r_r)
 		      begin
-			 command <= #1 rx_byte[7:4];
+			 command <= `D rx_byte[7:4];
 			 case (rx_addr)
 `ifdef CFG_DEBUG_ENABLED
 			   `LM32_DP:
@@ -431,37 +431,37 @@ module lm32_jtag
 				case (rx_byte[7:4])
  `ifdef CFG_HW_DEBUG_ENABLED
 				  `LM32_DP_READ_MEMORY:
-				    state <= #1 `LM32_JTAG_STATE_READ_BYTE_0;
+				    state <= `D `LM32_JTAG_STATE_READ_BYTE_0;
 				  `LM32_DP_READ_SEQUENTIAL:
 				    begin
-				       {jtag_byte_2, jtag_byte_3} <= #1 {jtag_byte_2, jtag_byte_3} + 1'b1;
-				       state <= #1 `LM32_JTAG_STATE_PROCESS_COMMAND;
+				       {jtag_byte_2, jtag_byte_3} <= `D {jtag_byte_2, jtag_byte_3} + 1'b1;
+				       state <= `D `LM32_JTAG_STATE_PROCESS_COMMAND;
 				    end
 				  `LM32_DP_WRITE_MEMORY:
-				    state <= #1 `LM32_JTAG_STATE_READ_BYTE_0;
+				    state <= `D `LM32_JTAG_STATE_READ_BYTE_0;
 				  `LM32_DP_WRITE_SEQUENTIAL:
 				    begin
-				       {jtag_byte_2, jtag_byte_3} <= #1 {jtag_byte_2, jtag_byte_3} + 1'b1;
-				       state <= #1 5;
+				       {jtag_byte_2, jtag_byte_3} <= `D {jtag_byte_2, jtag_byte_3} + 1'b1;
+				       state <= `D 5;
 				    end
 				  `LM32_DP_WRITE_CSR:
-				    state <= #1 `LM32_JTAG_STATE_READ_BYTE_0;
+				    state <= `D `LM32_JTAG_STATE_READ_BYTE_0;
  `endif
 				  `LM32_DP_BREAK:
 				    begin
  `ifdef CFG_JTAG_UART_ENABLED
-				       uart_rx_valid <= #1 `FALSE;
-				       uart_tx_valid <= #1 `FALSE;
+				       uart_rx_valid <= `D `FALSE;
+				       uart_tx_valid <= `D `FALSE;
  `endif
-				       jtag_break <= #1 `TRUE;
+				       jtag_break <= `D `TRUE;
 				    end
 				  `LM32_DP_RESET:
 				    begin
  `ifdef CFG_JTAG_UART_ENABLED
-				       uart_rx_valid <= #1 `FALSE;
-				       uart_tx_valid <= #1 `FALSE;
+				       uart_rx_valid <= `D `FALSE;
+				       uart_tx_valid <= `D `FALSE;
  `endif
-				       jtag_reset <= #1 `TRUE;
+				       jtag_reset <= `D `TRUE;
 				    end
 				endcase
 			     end
@@ -469,22 +469,22 @@ module lm32_jtag
 `ifdef CFG_JTAG_UART_ENABLED
 			   `LM32_TX:
 			     begin
-				uart_rx_byte <= #1 rx_byte;
-				uart_rx_valid <= #1 `TRUE;
+				uart_rx_byte <= `D rx_byte;
+				uart_rx_valid <= `D `TRUE;
 			     end
 			   `LM32_RX:
 			     begin
-				jtag_reg_d <= #1 uart_tx_byte;
-				uart_tx_valid <= #1 `FALSE;
+				jtag_reg_d <= `D uart_tx_byte;
+				uart_tx_valid <= `D `FALSE;
 			     end
  `ifdef CFG_FAST_DOWNLOAD_ENABLED
 			   `LM32_FD:
 			     begin
-				uart_rx_byte <= #1 rx_byte;
-				uart_rx_valid <= #1 `TRUE;
-				uart_rx_fifo <= #1 rx_fifo;
-				uart_rx_fifo_ptr <= #1 5'h0;
-				uart_rx_fifo_transaction <= #1 1'b1;
+				uart_rx_byte <= `D rx_byte;
+				uart_rx_valid <= `D `TRUE;
+				uart_rx_fifo <= `D rx_fifo;
+				uart_rx_fifo_ptr <= `D 5'h0;
+				uart_rx_fifo_transaction <= `D 1'b1;
 			     end
  `endif
 `endif
@@ -498,43 +498,43 @@ module lm32_jtag
 		 begin
 		    if (rx_toggle_r_r != rx_toggle_r_r_r)
 		      begin
-			 jtag_byte_0 <= #1 rx_byte;
-			 state <= #1 `LM32_JTAG_STATE_READ_BYTE_1;
+			 jtag_byte_0 <= `D rx_byte;
+			 state <= `D `LM32_JTAG_STATE_READ_BYTE_1;
 		      end
 		 end
                `LM32_JTAG_STATE_READ_BYTE_1:
 		 begin
 		    if (rx_toggle_r_r != rx_toggle_r_r_r)
 		      begin
-			 jtag_byte_1 <= #1 rx_byte;
-			 state <= #1 `LM32_JTAG_STATE_READ_BYTE_2;
+			 jtag_byte_1 <= `D rx_byte;
+			 state <= `D `LM32_JTAG_STATE_READ_BYTE_2;
 		      end
 		 end
                `LM32_JTAG_STATE_READ_BYTE_2:
 		 begin
 		    if (rx_toggle_r_r != rx_toggle_r_r_r)
 		      begin
-			 jtag_byte_2 <= #1 rx_byte;
-			 state <= #1 `LM32_JTAG_STATE_READ_BYTE_3;
+			 jtag_byte_2 <= `D rx_byte;
+			 state <= `D `LM32_JTAG_STATE_READ_BYTE_3;
 		      end
 		 end
                `LM32_JTAG_STATE_READ_BYTE_3:
 		 begin
 		    if (rx_toggle_r_r != rx_toggle_r_r_r)
 		      begin
-			 jtag_byte_3 <= #1 rx_byte;
+			 jtag_byte_3 <= `D rx_byte;
 			 if (command == `LM32_DP_READ_MEMORY)
-			   state <= #1 `LM32_JTAG_STATE_PROCESS_COMMAND;
+			   state <= `D `LM32_JTAG_STATE_PROCESS_COMMAND;
 			 else
-			   state <= #1 `LM32_JTAG_STATE_READ_BYTE_4;
+			   state <= `D `LM32_JTAG_STATE_READ_BYTE_4;
 		      end
 		 end
                `LM32_JTAG_STATE_READ_BYTE_4:
 		 begin
 		    if (rx_toggle_r_r != rx_toggle_r_r_r)
 		      begin
-			 jtag_byte_4 <= #1 rx_byte;
-			 state <= #1 `LM32_JTAG_STATE_PROCESS_COMMAND;
+			 jtag_byte_4 <= `D rx_byte;
+			 state <= `D `LM32_JTAG_STATE_PROCESS_COMMAND;
 		      end
 		 end
                `LM32_JTAG_STATE_PROCESS_COMMAND:
@@ -543,22 +543,22 @@ module lm32_jtag
 		      `LM32_DP_READ_MEMORY,
 		      `LM32_DP_READ_SEQUENTIAL:
 			begin
-			   jtag_read_enable <= #1 `TRUE;
-			   processing <= #1 `TRUE;
-			   state <= #1 `LM32_JTAG_STATE_WAIT_FOR_MEMORY;
+			   jtag_read_enable <= `D `TRUE;
+			   processing <= `D `TRUE;
+			   state <= `D `LM32_JTAG_STATE_WAIT_FOR_MEMORY;
 			end
 		      `LM32_DP_WRITE_MEMORY,
 			`LM32_DP_WRITE_SEQUENTIAL:
 			  begin
-			     jtag_write_enable <= #1 `TRUE;
-			     processing <= #1 `TRUE;
-			     state <= #1 `LM32_JTAG_STATE_WAIT_FOR_MEMORY;
+			     jtag_write_enable <= `D `TRUE;
+			     processing <= `D `TRUE;
+			     state <= `D `LM32_JTAG_STATE_WAIT_FOR_MEMORY;
 			  end
 		      `LM32_DP_WRITE_CSR:
 			begin
-			   jtag_csr_write_enable <= #1 `TRUE;
-			   processing <= #1 `TRUE;
-			   state <= #1 `LM32_JTAG_STATE_WAIT_FOR_CSR;
+			   jtag_csr_write_enable <= `D `TRUE;
+			   processing <= `D `TRUE;
+			   state <= `D `LM32_JTAG_STATE_WAIT_FOR_CSR;
 			end
 		    endcase
 		 end
@@ -566,18 +566,18 @@ module lm32_jtag
 		 begin
 		    if (jtag_access_complete == `TRUE)
 		      begin
-			 jtag_read_enable <= #1 `FALSE;
-			 jtag_reg_d <= #1 jtag_read_data;
-			 jtag_write_enable <= #1 `FALSE;
-			 processing <= #1 `FALSE;
-			 state <= #1 `LM32_JTAG_STATE_READ_COMMAND;
+			 jtag_read_enable <= `D `FALSE;
+			 jtag_reg_d <= `D jtag_read_data;
+			 jtag_write_enable <= `D `FALSE;
+			 processing <= `D `FALSE;
+			 state <= `D `LM32_JTAG_STATE_READ_COMMAND;
 		      end
 		 end
                `LM32_JTAG_STATE_WAIT_FOR_CSR:
 		 begin
-		    jtag_csr_write_enable <= #1 `FALSE;
-		    processing <= #1 `FALSE;
-		    state <= #1 `LM32_JTAG_STATE_READ_COMMAND;
+		    jtag_csr_write_enable <= `D `FALSE;
+		    processing <= `D `FALSE;
+		    state <= `D `LM32_JTAG_STATE_READ_COMMAND;
 		 end
 `endif
              endcase

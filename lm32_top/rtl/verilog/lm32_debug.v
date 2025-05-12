@@ -247,15 +247,15 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        bp_a[i] <= #1 {`LM32_PC_WIDTH{1'bx}};
-        bp_e[i] <= #1 `FALSE;
+        bp_a[i] <= `D {`LM32_PC_WIDTH{1'bx}};
+        bp_e[i] <= `D `FALSE;
     end
     else
     begin
         if ((debug_csr_write_enable == `TRUE) && (debug_csr == `LM32_CSR_BP0 + i))
         begin
-            bp_a[i] <= #1 debug_csr_write_data[`LM32_PC_RNG];
-            bp_e[i] <= #1 debug_csr_write_data[0];
+            bp_a[i] <= `D debug_csr_write_data[`LM32_PC_RNG];
+            bp_e[i] <= `D debug_csr_write_data[0];
         end
     end
 end
@@ -270,17 +270,17 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        wp[i] <= #1 {`LM32_WORD_WIDTH{1'bx}};
-        wpc_c[i] <= #1 `LM32_WPC_C_DISABLED;
+        wp[i] <= `D {`LM32_WORD_WIDTH{1'bx}};
+        wpc_c[i] <= `D `LM32_WPC_C_DISABLED;
     end
     else
     begin
         if (debug_csr_write_enable == `TRUE)
         begin
             if (debug_csr == `LM32_CSR_DC)
-                wpc_c[i] <= #1 debug_csr_write_data[3+i*2:2+i*2];
+                wpc_c[i] <= `D debug_csr_write_data[3+i*2:2+i*2];
             if (debug_csr == `LM32_CSR_WP0 + i)
-                wp[i] <= #1 debug_csr_write_data;
+                wp[i] <= `D debug_csr_write_data;
         end
     end
 end
@@ -291,11 +291,11 @@ endgenerate
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        dc_re <= #1 `FALSE;
+        dc_re <= `D `FALSE;
     else
     begin
         if ((debug_csr_write_enable == `TRUE) && (debug_csr == `LM32_CSR_DC))
-            dc_re <= #1 debug_csr_write_data[1];
+            dc_re <= `D debug_csr_write_data[1];
     end
 end
 
@@ -305,18 +305,18 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        state <= #1 `LM32_DEBUG_SS_STATE_IDLE;
-        dc_ss <= #1 `FALSE;
+        state <= `D `LM32_DEBUG_SS_STATE_IDLE;
+        dc_ss <= `D `FALSE;
     end
     else
     begin
         if ((debug_csr_write_enable == `TRUE) && (debug_csr == `LM32_CSR_DC))
         begin
-            dc_ss <= #1 debug_csr_write_data[0];
+            dc_ss <= `D debug_csr_write_data[0];
             if (debug_csr_write_data[0] == `FALSE)
-                state <= #1 `LM32_DEBUG_SS_STATE_IDLE;
+                state <= `D `LM32_DEBUG_SS_STATE_IDLE;
             else
-                state <= #1 `LM32_DEBUG_SS_STATE_WAIT_FOR_RET;
+                state <= `D `LM32_DEBUG_SS_STATE_WAIT_FOR_RET;
         end
         case (state)
         `LM32_DEBUG_SS_STATE_WAIT_FOR_RET:
@@ -327,26 +327,26 @@ begin
                     )
                 && (stall_x == `FALSE)
                )
-                state <= #1 `LM32_DEBUG_SS_STATE_EXECUTE_ONE_INSN;
+                state <= `D `LM32_DEBUG_SS_STATE_EXECUTE_ONE_INSN;
         end
         `LM32_DEBUG_SS_STATE_EXECUTE_ONE_INSN:
         begin
             // Wait for an instruction to be executed
             if ((q_x == `TRUE) && (stall_x == `FALSE))
-                state <= #1 `LM32_DEBUG_SS_STATE_RAISE_BREAKPOINT;
+                state <= `D `LM32_DEBUG_SS_STATE_RAISE_BREAKPOINT;
         end
         `LM32_DEBUG_SS_STATE_RAISE_BREAKPOINT:
         begin
             // Wait for exception to be raised
 `ifdef CFG_DCACHE_ENABLED
             if (dcache_refill_request == `TRUE)
-                state <= #1 `LM32_DEBUG_SS_STATE_EXECUTE_ONE_INSN;
+                state <= `D `LM32_DEBUG_SS_STATE_EXECUTE_ONE_INSN;
             else
 `endif
                  if ((exception_x == `TRUE) && (q_x == `TRUE) && (stall_x == `FALSE))
             begin
-                dc_ss <= #1 `FALSE;
-                state <= #1 `LM32_DEBUG_SS_STATE_RESTART;
+                dc_ss <= `D `FALSE;
+                state <= `D `LM32_DEBUG_SS_STATE_RESTART;
             end
         end
         `LM32_DEBUG_SS_STATE_RESTART:
@@ -354,10 +354,10 @@ begin
             // Watch to see if stepped instruction is restarted due to a cache miss
 `ifdef CFG_DCACHE_ENABLED
             if (dcache_refill_request == `TRUE)
-                state <= #1 `LM32_DEBUG_SS_STATE_EXECUTE_ONE_INSN;
+                state <= `D `LM32_DEBUG_SS_STATE_EXECUTE_ONE_INSN;
             else
 `endif
-                state <= #1 `LM32_DEBUG_SS_STATE_IDLE;
+                state <= `D `LM32_DEBUG_SS_STATE_IDLE;
         end
         endcase
     end

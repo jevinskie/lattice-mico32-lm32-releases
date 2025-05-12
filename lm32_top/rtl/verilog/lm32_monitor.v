@@ -144,10 +144,10 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        write_enable <= #1 `FALSE;
-        MON_ACK_O <= #1 `FALSE;
-        MON_DAT_O <= #1 {`LM32_WORD_WIDTH{1'bx}};
-        state <= #1 2'b00;
+        write_enable <= `D `FALSE;
+        MON_ACK_O <= `D `FALSE;
+        MON_DAT_O <= `D {`LM32_WORD_WIDTH{1'bx}};
+        state <= `D 2'b00;
     end
     else
     begin
@@ -155,33 +155,33 @@ begin
         2'b01:
         begin
             // Output read data to Wishbone
-            MON_ACK_O <= #1 `TRUE;
-            MON_DAT_O <= #1 data;
+            MON_ACK_O <= `D `TRUE;
+            MON_DAT_O <= `D data;
             // Sub-word writes are performed using read-modify-write
             // as the Lattice EBRs don't support byte enables
             if (MON_WE_I == `TRUE)
-                write_enable <= #1 `TRUE;
-            write_data[7:0] <= #1 MON_SEL_I[0] ? MON_DAT_I[7:0] : data[7:0];
-            write_data[15:8] <= #1 MON_SEL_I[1] ? MON_DAT_I[15:8] : data[15:8];
-            write_data[23:16] <= #1 MON_SEL_I[2] ? MON_DAT_I[23:16] : data[23:16];
-            write_data[31:24] <= #1 MON_SEL_I[3] ? MON_DAT_I[31:24] : data[31:24];
-            state <= #1 2'b10;
+                write_enable <= `D `TRUE;
+            write_data[7:0] <= `D MON_SEL_I[0] ? MON_DAT_I[7:0] : data[7:0];
+            write_data[15:8] <= `D MON_SEL_I[1] ? MON_DAT_I[15:8] : data[15:8];
+            write_data[23:16] <= `D MON_SEL_I[2] ? MON_DAT_I[23:16] : data[23:16];
+            write_data[31:24] <= `D MON_SEL_I[3] ? MON_DAT_I[31:24] : data[31:24];
+            state <= `D 2'b10;
         end
         2'b10:
         begin
             // Wishbone access occurs in this cycle
-            write_enable <= #1 `FALSE;
-            MON_ACK_O <= #1 `FALSE;
-            MON_DAT_O <= #1 {`LM32_WORD_WIDTH{1'bx}};
-            state <= #1 2'b00;
+            write_enable <= `D `FALSE;
+            MON_ACK_O <= `D `FALSE;
+            MON_DAT_O <= `D {`LM32_WORD_WIDTH{1'bx}};
+            state <= `D 2'b00;
         end
         default:
         begin
-           write_enable <= #1 `FALSE;
-           MON_ACK_O <= #1 `FALSE;
+           write_enable <= `D `FALSE;
+           MON_ACK_O <= `D `FALSE;
             // Wait for a Wishbone access
             if ((MON_STB_I == `TRUE) && (MON_CYC_I == `TRUE))
-                state <= #1 2'b01;
+                state <= `D 2'b01;
         end
         endcase
     end

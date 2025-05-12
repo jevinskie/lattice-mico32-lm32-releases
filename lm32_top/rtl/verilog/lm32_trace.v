@@ -146,65 +146,65 @@ module lm32_trace(
    assign 		dat_o = (rw_creg ? reg_dat_o : trace_dat_o);
 
    initial begin
-      trig_type <= #1 0;
-      stop_type <= #1 0;
-      trace_len <= #1 0;
-      pc_low    <= #1 0;
-      pc_high   <= #1 0;
-      trace_start <= #1 0;
-      trace_stop  <= #1 0;
-      ack_o 	<= #1 0;
-      reg_dat_o <= #1 0;
-      mem_valid <= #1 0;
-      started   <= #1 0;
-      capturing <= #1 0;
+      trig_type <= `D 0;
+      stop_type <= `D 0;
+      trace_len <= `D 0;
+      pc_low    <= `D 0;
+      pc_high   <= `D 0;
+      trace_start <= `D 0;
+      trace_stop  <= `D 0;
+      ack_o 	<= `D 0;
+      reg_dat_o <= `D 0;
+      mem_valid <= `D 0;
+      started   <= `D 0;
+      capturing <= `D 0;
    end
 
    // the host side control
    always @(posedge clk_i `CFG_RESET_SENSITIVITY)
      begin
 	if (rst_i == `TRUE) begin
-	   trig_type   <= #1 0;
-	   trace_stop  <= #1 0;
-	   trace_start <= #1 0;
-	   pc_low      <= #1 0;
-	   pc_high     <= #1 0;
-	   ack_o       <= #1 0;
+	   trig_type   <= `D 0;
+	   trace_stop  <= `D 0;
+	   trace_start <= `D 0;
+	   pc_low      <= `D 0;
+	   pc_high     <= `D 0;
+	   ack_o       <= `D 0;
 	end else begin
 	   if (stb_i == `TRUE && ack_o == `FALSE) begin
 	      if (rw_creg) begin // control register access
-		 ack_o <= #1 `TRUE;
+		 ack_o <= `D `TRUE;
 		 if (we_i == `TRUE) begin
 		    case ({adr_i[11:2],2'b0})
 		      // write to trig type
 		      12'd0:
 			begin
 			   if (sel_i[0]) begin
-			      trig_type[4:0] <= #1 dat_i[4:0];
+			      trig_type[4:0] <= `D dat_i[4:0];
                            end
                            if (sel_i[3]) begin
-                              trace_start <= #1 dat_i[31];
-                              trace_stop  <= #1 dat_i[30];
+                              trace_start <= `D dat_i[31];
+                              trace_stop  <= `D dat_i[30];
                            end
 			end
 		      12'd8:
 			begin
-			   if (sel_i[3]) pc_low[31:24] <= #1 dat_i[31:24];
-			   if (sel_i[2]) pc_low[23:16] <= #1 dat_i[23:16];
-			   if (sel_i[1]) pc_low[15:8]  <= #1 dat_i[15:8];
-			   if (sel_i[0]) pc_low[7:0]   <= #1 dat_i[7:0];
+			   if (sel_i[3]) pc_low[31:24] <= `D dat_i[31:24];
+			   if (sel_i[2]) pc_low[23:16] <= `D dat_i[23:16];
+			   if (sel_i[1]) pc_low[15:8]  <= `D dat_i[15:8];
+			   if (sel_i[0]) pc_low[7:0]   <= `D dat_i[7:0];
 			end
 		      12'd12:
 			begin
-			   if (sel_i[3]) pc_high[31:24] <= #1 dat_i[31:24];
-			   if (sel_i[2]) pc_high[23:16] <= #1 dat_i[23:16];
-			   if (sel_i[1]) pc_high[15:8]  <= #1 dat_i[15:8];
-			   if (sel_i[0]) pc_high[7:0]   <= #1 dat_i[7:0];
+			   if (sel_i[3]) pc_high[31:24] <= `D dat_i[31:24];
+			   if (sel_i[2]) pc_high[23:16] <= `D dat_i[23:16];
+			   if (sel_i[1]) pc_high[15:8]  <= `D dat_i[15:8];
+			   if (sel_i[0]) pc_high[7:0]   <= `D dat_i[7:0];
 			end
 		      12'd16:
                         begin
 			   if (sel_i[0])begin
-                               stop_type[4:0] <= #1 dat_i[4:0];
+                               stop_type[4:0] <= `D dat_i[4:0];
                            end
                         end
 		    endcase
@@ -212,27 +212,27 @@ module lm32_trace(
 		    case ({adr_i[11:2],2'b0})
 		      // read the trig type
 		      12'd0:
-                        reg_dat_o <= #1 {22'b1,capturing,mem_valid,ovrflw,trace_we,started,trig_type};
+                        reg_dat_o <= `D {22'b1,capturing,mem_valid,ovrflw,trace_we,started,trig_type};
 		      12'd4:
-                        reg_dat_o <= #1 trace_len;
+                        reg_dat_o <= `D trace_len;
 		      12'd8:
-			reg_dat_o <= #1 pc_low;
+			reg_dat_o <= `D pc_low;
 		      12'd12:
-			reg_dat_o <= #1 pc_high;
+			reg_dat_o <= `D pc_high;
 		      default:
-			reg_dat_o <= #1 {27'b0,stop_type};
+			reg_dat_o <= `D {27'b0,stop_type};
 		    endcase
 		 end // else: !if(we_i == `TRUE)
 	      end else // read / write memory
 		if (we_i == `FALSE) begin
-		   ack_o <= #1 `TRUE;
+		   ack_o <= `D `TRUE;
 		end else
-		  ack_o <= #1 `FALSE;
+		  ack_o <= `D `FALSE;
 	      // not allowed to write to trace memory
 	   end else begin // if (stb_i == `TRUE)
-	      trace_start  <= #1 `FALSE;
-	      trace_stop   <= #1 `FALSE;
-	      ack_o        <= #1 `FALSE;
+	      trace_start  <= `D `FALSE;
+	      trace_stop   <= `D `FALSE;
+	      ack_o        <= `D `FALSE;
 	   end // else: !if(stb_i == `TRUE)
 	end // else: !if(rst_i == `TRUE)
      end
@@ -268,31 +268,31 @@ module lm32_trace(
    always @(posedge clk_i `CFG_RESET_SENSITIVITY)
      begin
 	if (rst_i == `TRUE) begin
-	   tstate    <= #1 0;
-	   trace_we  <= #1 0;
-	   trace_len <= #1 0;
-	   ovrflw    <= #1 `FALSE;
-	   mem_valid <= #1 0;
-           started   <= #1 0;
-           capturing <= #1 0;
+	   tstate    <= `D 0;
+	   trace_we  <= `D 0;
+	   trace_len <= `D 0;
+	   ovrflw    <= `D `FALSE;
+	   mem_valid <= `D 0;
+           started   <= `D 0;
+           capturing <= `D 0;
 	end else begin
 	   case (tstate)
 	   3'd0:
 	     // start capture
 	     if (trace_start) begin
-		tstate <= #1 3'd1;
-		mem_valid <= #1 0;
-                started   <= #1 1;
+		tstate <= `D 3'd1;
+		mem_valid <= `D 0;
+                started   <= `D 1;
 	     end
 	   3'd1:
 	     begin
 		// wait for trigger
 		if (trace_begin) begin
-                   capturing <= #1 1;
-		   tstate    <= #1 3'd2;
-		   trace_we  <= #1 `TRUE;
-		   trace_len <= #1 0;
-		   ovrflw    <= #1 `FALSE;
+                   capturing <= `D 1;
+		   tstate    <= `D 3'd2;
+		   trace_we  <= `D `TRUE;
+		   trace_len <= `D 0;
+		   ovrflw    <= `D `FALSE;
 		end
 	     end // case: 3'd1
 
@@ -300,18 +300,18 @@ module lm32_trace(
 	     begin
 		if (trace_pc_valid) begin
 		   if (trace_len[mem_addr_width])
-		     trace_len <= #1 0;
+		     trace_len <= `D 0;
 		   else
-		     trace_len <= #1 trace_len + 1;
+		     trace_len <= `D trace_len + 1;
 		end
-		if (!ovrflw) ovrflw <= #1 trace_len[mem_addr_width];
+		if (!ovrflw) ovrflw <= `D trace_len[mem_addr_width];
 		// wait for stop condition
 		if (trace_end) begin
-		   tstate    <= #1 3'd0;
-		   trace_we  <= #1 0;
-		   mem_valid <= #1 1;
-                   started   <= #1 0;
-                   capturing <= #1 0;
+		   tstate    <= `D 3'd0;
+		   trace_we  <= `D 0;
+		   mem_valid <= `D 1;
+                   started   <= `D 0;
+                   capturing <= `D 0;
 		end
 	     end // case: 3'd2
 	   endcase

@@ -343,13 +343,13 @@ reg wb_load_complete;                                   // Indicates when a Wish
    always @(posedge clk_i `CFG_RESET_SENSITIVITY)
      if (rst_i == `TRUE)
        begin
-	  dram_bypass_en <= #1 `FALSE;
-	  dram_bypass_data <= #1 0;
+	  dram_bypass_en <= `D `FALSE;
+	  dram_bypass_data <= `D 0;
        end
      else
        begin
 	  if (stall_x == `FALSE)
-	    dram_bypass_data <= #1 dram_store_data_m;
+	    dram_bypass_data <= `D dram_store_data_m;
 
 	  if (   (stall_m == `FALSE)
               && (stall_x == `FALSE)
@@ -359,12 +359,12 @@ reg wb_load_complete;                                   // Indicates when a Wish
 		 )
 	      && (load_store_address_x[(`LM32_WORD_WIDTH-1):2] == load_store_address_m[(`LM32_WORD_WIDTH-1):2])
 	     )
-	    dram_bypass_en <= #1 `TRUE;
+	    dram_bypass_en <= `D `TRUE;
 	  else
 	    if (   (dram_bypass_en == `TRUE)
 		&& (stall_x == `FALSE)
 	       )
-	      dram_bypass_en <= #1 `FALSE;
+	      dram_bypass_en <= `D `FALSE;
        end
 
    assign dram_data_m = dram_bypass_en ? dram_bypass_data : dram_data_out;
@@ -624,26 +624,26 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        d_cyc_o <= #1 `FALSE;
-        d_stb_o <= #1 `FALSE;
-        d_dat_o <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        d_adr_o <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        d_sel_o <= #1 {`LM32_BYTE_SELECT_WIDTH{`FALSE}};
-        d_we_o <= #1 `FALSE;
-        d_cti_o <= #1 `LM32_CTYPE_END;
-        d_lock_o <= #1 `FALSE;
-        wb_data_m <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        wb_load_complete <= #1 `FALSE;
-        stall_wb_load <= #1 `FALSE;
+        d_cyc_o <= `D `FALSE;
+        d_stb_o <= `D `FALSE;
+        d_dat_o <= `D {`LM32_WORD_WIDTH{1'b0}};
+        d_adr_o <= `D {`LM32_WORD_WIDTH{1'b0}};
+        d_sel_o <= `D {`LM32_BYTE_SELECT_WIDTH{`FALSE}};
+        d_we_o <= `D `FALSE;
+        d_cti_o <= `D `LM32_CTYPE_END;
+        d_lock_o <= `D `FALSE;
+        wb_data_m <= `D {`LM32_WORD_WIDTH{1'b0}};
+        wb_load_complete <= `D `FALSE;
+        stall_wb_load <= `D `FALSE;
 `ifdef CFG_DCACHE_ENABLED
-        dcache_refill_ready <= #1 `FALSE;
+        dcache_refill_ready <= `D `FALSE;
 `endif
     end
     else
     begin
 `ifdef CFG_DCACHE_ENABLED
         // Refill ready should only be asserted for a single cycle
-        dcache_refill_ready <= #1 `FALSE;
+        dcache_refill_ready <= `D `FALSE;
 `endif
         // Is a Wishbone cycle already in progress?
         if (d_cyc_o == `TRUE)
@@ -655,25 +655,25 @@ begin
                 if ((dcache_refilling == `TRUE) && (!last_word))
                 begin
                     // Fetch next word of cache line
-                    d_adr_o[addr_offset_msb:addr_offset_lsb] <= #1 d_adr_o[addr_offset_msb:addr_offset_lsb] + 1'b1;
+                    d_adr_o[addr_offset_msb:addr_offset_lsb] <= `D d_adr_o[addr_offset_msb:addr_offset_lsb] + 1'b1;
                 end
                 else
 `endif
                 begin
                     // Refill/access complete
-                    d_cyc_o <= #1 `FALSE;
-                    d_stb_o <= #1 `FALSE;
-                    d_lock_o <= #1 `FALSE;
+                    d_cyc_o <= `D `FALSE;
+                    d_stb_o <= `D `FALSE;
+                    d_lock_o <= `D `FALSE;
                 end
 `ifdef CFG_DCACHE_ENABLED
-                d_cti_o <= #1 next_cycle_type;
+                d_cti_o <= `D next_cycle_type;
                 // If we are performing a refill, indicate to cache next word of data is ready
-                dcache_refill_ready <= #1 dcache_refilling;
+                dcache_refill_ready <= `D dcache_refilling;
 `endif
                 // Register data read from Wishbone interface
-                wb_data_m <= #1 d_dat_i;
+                wb_data_m <= `D d_dat_i;
                 // Don't set when stores complete - otherwise we'll deadlock if load in m stage
-                wb_load_complete <= #1 !d_we_o;
+                wb_load_complete <= `D !d_we_o;
             end
             // synthesis translate_off
             if (d_err_i == `TRUE)
@@ -686,13 +686,13 @@ begin
             if (dcache_refill_request == `TRUE)
             begin
                 // Start cache refill
-                d_adr_o <= #1 first_address;
-                d_cyc_o <= #1 `TRUE;
-                d_sel_o <= #1 {`LM32_WORD_WIDTH/8{`TRUE}};
-                d_stb_o <= #1 `TRUE;
-                d_we_o <= #1 `FALSE;
-                d_cti_o <= #1 first_cycle_type;
-                //d_lock_o <= #1 `TRUE;
+                d_adr_o <= `D first_address;
+                d_cyc_o <= `D `TRUE;
+                d_sel_o <= `D {`LM32_WORD_WIDTH/8{`TRUE}};
+                d_stb_o <= `D `TRUE;
+                d_we_o <= `D `FALSE;
+                d_cti_o <= `D first_cycle_type;
+                //d_lock_o <= `D `TRUE;
             end
             else
 `endif
@@ -707,13 +707,13 @@ begin
                     )
             begin
                 // Data cache is write through, so all stores go to memory
-                d_dat_o <= #1 store_data_m;
-                d_adr_o <= #1 load_store_address_m;
-                d_cyc_o <= #1 `TRUE;
-                d_sel_o <= #1 byte_enable_m;
-                d_stb_o <= #1 `TRUE;
-                d_we_o <= #1 `TRUE;
-                d_cti_o <= #1 `LM32_CTYPE_END;
+                d_dat_o <= `D store_data_m;
+                d_adr_o <= `D load_store_address_m;
+                d_cyc_o <= `D `TRUE;
+                d_sel_o <= `D byte_enable_m;
+                d_stb_o <= `D `TRUE;
+                d_we_o <= `D `TRUE;
+                d_cti_o <= `D `LM32_CTYPE_END;
             end
             else if (   (load_q_m == `TRUE)
                      && (wb_select_m == `TRUE)
@@ -722,24 +722,24 @@ begin
                     )
             begin
                 // Read requested address
-                stall_wb_load <= #1 `FALSE;
-                d_adr_o <= #1 load_store_address_m;
-                d_cyc_o <= #1 `TRUE;
-                d_sel_o <= #1 byte_enable_m;
-                d_stb_o <= #1 `TRUE;
-                d_we_o <= #1 `FALSE;
-                d_cti_o <= #1 `LM32_CTYPE_END;
+                stall_wb_load <= `D `FALSE;
+                d_adr_o <= `D load_store_address_m;
+                d_cyc_o <= `D `TRUE;
+                d_sel_o <= `D byte_enable_m;
+                d_stb_o <= `D `TRUE;
+                d_we_o <= `D `FALSE;
+                d_cti_o <= `D `LM32_CTYPE_END;
             end
         end
         // Clear load/store complete flag when instruction leaves M stage
         if (stall_m == `FALSE)
-            wb_load_complete <= #1 `FALSE;
+            wb_load_complete <= `D `FALSE;
         // When a Wishbone load first enters the M stage, we need to stall it
         if ((load_q_x == `TRUE) && (wb_select_x == `TRUE) && (stall_x == `FALSE))
-            stall_wb_load <= #1 `TRUE;
+            stall_wb_load <= `D `TRUE;
         // Clear stall request if load instruction is killed
         if ((kill_m == `TRUE) || (exception_m == `TRUE))
-            stall_wb_load <= #1 `FALSE;
+            stall_wb_load <= `D `FALSE;
     end
 end
 
@@ -750,39 +750,39 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        sign_extend_m <= #1 `FALSE;
-        size_m <= #1 2'b00;
-        byte_enable_m <= #1 `FALSE;
-        store_data_m <= #1 {`LM32_WORD_WIDTH{1'b0}};
+        sign_extend_m <= `D `FALSE;
+        size_m <= `D 2'b00;
+        byte_enable_m <= `D `FALSE;
+        store_data_m <= `D {`LM32_WORD_WIDTH{1'b0}};
 `ifdef CFG_DCACHE_ENABLED
-        dcache_select_m <= #1 `FALSE;
+        dcache_select_m <= `D `FALSE;
 `endif
 `ifdef CFG_DRAM_ENABLED
-        dram_select_m <= #1 `FALSE;
+        dram_select_m <= `D `FALSE;
 `endif
 `ifdef CFG_IROM_ENABLED
-        irom_select_m <= #1 `FALSE;
+        irom_select_m <= `D `FALSE;
 `endif
-        wb_select_m <= #1 `FALSE;
+        wb_select_m <= `D `FALSE;
     end
     else
     begin
         if (stall_m == `FALSE)
         begin
-            sign_extend_m <= #1 sign_extend_x;
-            size_m <= #1 size_x;
-            byte_enable_m <= #1 byte_enable_x;
-            store_data_m <= #1 store_data_x;
+            sign_extend_m <= `D sign_extend_x;
+            size_m <= `D size_x;
+            byte_enable_m <= `D byte_enable_x;
+            store_data_m <= `D store_data_x;
 `ifdef CFG_DCACHE_ENABLED
-            dcache_select_m <= #1 dcache_select_x;
+            dcache_select_m <= `D dcache_select_x;
 `endif
 `ifdef CFG_DRAM_ENABLED
-            dram_select_m <= #1 dram_select_x;
+            dram_select_m <= `D dram_select_x;
 `endif
 `ifdef CFG_IROM_ENABLED
-            irom_select_m <= #1 irom_select_x;
+            irom_select_m <= `D irom_select_x;
 `endif
-            wb_select_m <= #1 wb_select_x;
+            wb_select_m <= `D wb_select_x;
         end
     end
 end
@@ -792,15 +792,15 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        size_w <= #1 2'b00;
-        data_w <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        sign_extend_w <= #1 `FALSE;
+        size_w <= `D 2'b00;
+        data_w <= `D {`LM32_WORD_WIDTH{1'b0}};
+        sign_extend_w <= `D `FALSE;
     end
     else
     begin
-        size_w <= #1 size_m;
-        data_w <= #1 data_m;
-        sign_extend_w <= #1 sign_extend_m;
+        size_w <= `D size_m;
+        data_w <= `D data_m;
+        sign_extend_w <= `D sign_extend_m;
     end
 end
 

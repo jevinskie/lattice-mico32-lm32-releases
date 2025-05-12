@@ -1315,15 +1315,15 @@ lm32_debug #(
    always @(posedge clk_i `CFG_RESET_SENSITIVITY)
      if (rst_i == `TRUE)
        begin
-	  regfile_raw_0 <= #1 1'b0;
-	  regfile_raw_1 <= #1 1'b0;
-	  w_result_d <= #1 32'b0;
+	  regfile_raw_0 <= `D 1'b0;
+	  regfile_raw_1 <= `D 1'b0;
+	  w_result_d <= `D 32'b0;
        end
      else
        begin
-	  regfile_raw_0 <= #1 regfile_raw_0_nxt;
-	  regfile_raw_1 <= #1 regfile_raw_1_nxt;
-	  w_result_d <= #1 w_result;
+	  regfile_raw_0 <= `D regfile_raw_0_nxt;
+	  regfile_raw_1 <= `D regfile_raw_1_nxt;
+	  w_result_d <= `D w_result;
        end
 
    /*----------------------------------------------------------------------
@@ -2149,14 +2149,14 @@ end
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        eba <= #1 eba_reset[`LM32_PC_WIDTH+2-1:8];
+        eba <= `D eba_reset[`LM32_PC_WIDTH+2-1:8];
     else
     begin
         if ((csr_write_enable_q_x == `TRUE) && (csr_x == `LM32_CSR_EBA) && (stall_x == `FALSE))
-            eba <= #1 operand_1_x[`LM32_PC_WIDTH+2-1:8];
+            eba <= `D operand_1_x[`LM32_PC_WIDTH+2-1:8];
 `ifdef CFG_HW_DEBUG_ENABLED
         if ((jtag_csr_write_enable == `TRUE) && (jtag_csr == `LM32_CSR_EBA))
-            eba <= #1 jtag_csr_write_data[`LM32_PC_WIDTH+2-1:8];
+            eba <= `D jtag_csr_write_data[`LM32_PC_WIDTH+2-1:8];
 `endif
     end
 end
@@ -2166,14 +2166,14 @@ end
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        deba <= #1 deba_reset[`LM32_PC_WIDTH+2-1:8];
+        deba <= `D deba_reset[`LM32_PC_WIDTH+2-1:8];
     else
     begin
         if ((csr_write_enable_q_x == `TRUE) && (csr_x == `LM32_CSR_DEBA) && (stall_x == `FALSE))
-            deba <= #1 operand_1_x[`LM32_PC_WIDTH+2-1:8];
+            deba <= `D operand_1_x[`LM32_PC_WIDTH+2-1:8];
 `ifdef CFG_HW_DEBUG_ENABLED
         if ((jtag_csr_write_enable == `TRUE) && (jtag_csr == `LM32_CSR_DEBA))
-            deba <= #1 jtag_csr_write_data[`LM32_PC_WIDTH+2-1:8];
+            deba <= `D jtag_csr_write_data[`LM32_PC_WIDTH+2-1:8];
 `endif
     end
 end
@@ -2184,9 +2184,9 @@ end
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        cc <= #1 {`LM32_WORD_WIDTH{1'b0}};
+        cc <= `D {`LM32_WORD_WIDTH{1'b0}};
     else
-        cc <= #1 cc + 1'b1;
+        cc <= `D cc + 1'b1;
 end
 `endif
 
@@ -2195,15 +2195,15 @@ end
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
-        data_bus_error_seen <= #1 `FALSE;
+        data_bus_error_seen <= `D `FALSE;
     else
     begin
         // Set flag when bus error is detected
         if ((D_ERR_I == `TRUE) && (D_CYC_O == `TRUE))
-            data_bus_error_seen <= #1 `TRUE;
+            data_bus_error_seen <= `D `TRUE;
         // Clear flag when exception is taken
         if ((exception_m == `TRUE) && (kill_m == `FALSE))
-            data_bus_error_seen <= #1 `FALSE;
+            data_bus_error_seen <= `D `FALSE;
     end
 end
 `endif
@@ -2254,48 +2254,48 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        valid_f <= #1 `FALSE;
-        valid_d <= #1 `FALSE;
-        valid_x <= #1 `FALSE;
-        valid_m <= #1 `FALSE;
-        valid_w <= #1 `FALSE;
+        valid_f <= `D `FALSE;
+        valid_d <= `D `FALSE;
+        valid_x <= `D `FALSE;
+        valid_m <= `D `FALSE;
+        valid_w <= `D `FALSE;
     end
     else
     begin
         if ((kill_f == `TRUE) || (stall_a == `FALSE))
 `ifdef LM32_CACHE_ENABLED
-            valid_f <= #1 valid_a;
+            valid_f <= `D valid_a;
 `else
-            valid_f <= #1 `TRUE;
+            valid_f <= `D `TRUE;
 `endif
         else if (stall_f == `FALSE)
-            valid_f <= #1 `FALSE;
+            valid_f <= `D `FALSE;
 
         if (kill_d == `TRUE)
-            valid_d <= #1 `FALSE;
+            valid_d <= `D `FALSE;
         else if (stall_f == `FALSE)
-            valid_d <= #1 valid_f & !kill_f;
+            valid_d <= `D valid_f & !kill_f;
         else if (stall_d == `FALSE)
-            valid_d <= #1 `FALSE;
+            valid_d <= `D `FALSE;
 
         if (stall_d == `FALSE)
-            valid_x <= #1 valid_d & !kill_d;
+            valid_x <= `D valid_d & !kill_d;
         else if (kill_x == `TRUE)
-            valid_x <= #1 `FALSE;
+            valid_x <= `D `FALSE;
         else if (stall_x == `FALSE)
-            valid_x <= #1 `FALSE;
+            valid_x <= `D `FALSE;
 
         if (kill_m == `TRUE)
-            valid_m <= #1 `FALSE;
+            valid_m <= `D `FALSE;
         else if (stall_x == `FALSE)
-            valid_m <= #1 valid_x & !kill_x;
+            valid_m <= `D valid_x & !kill_x;
         else if (stall_m == `FALSE)
-            valid_m <= #1 `FALSE;
+            valid_m <= `D `FALSE;
 
         if (stall_m == `FALSE)
-            valid_w <= #1 valid_m & !kill_m;
+            valid_w <= `D valid_m & !kill_m;
         else
-            valid_w <= #1 `FALSE;
+            valid_w <= `D `FALSE;
     end
 end
 
@@ -2305,113 +2305,113 @@ begin
     if (rst_i == `TRUE)
     begin
 `ifdef CFG_USER_ENABLED
-        user_opcode <= #1 {`LM32_USER_OPCODE_WIDTH{1'b0}};
+        user_opcode <= `D {`LM32_USER_OPCODE_WIDTH{1'b0}};
 `endif
-        operand_0_x <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        operand_1_x <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        store_operand_x <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        branch_target_x <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        x_result_sel_csr_x <= #1 `FALSE;
+        operand_0_x <= `D {`LM32_WORD_WIDTH{1'b0}};
+        operand_1_x <= `D {`LM32_WORD_WIDTH{1'b0}};
+        store_operand_x <= `D {`LM32_WORD_WIDTH{1'b0}};
+        branch_target_x <= `D {`LM32_WORD_WIDTH{1'b0}};
+        x_result_sel_csr_x <= `D `FALSE;
 `ifdef LM32_MC_ARITHMETIC_ENABLED
-        x_result_sel_mc_arith_x <= #1 `FALSE;
+        x_result_sel_mc_arith_x <= `D `FALSE;
 `endif
 `ifdef LM32_NO_BARREL_SHIFT
-        x_result_sel_shift_x <= #1 `FALSE;
+        x_result_sel_shift_x <= `D `FALSE;
 `endif
 `ifdef CFG_SIGN_EXTEND_ENABLED
-        x_result_sel_sext_x <= #1 `FALSE;
+        x_result_sel_sext_x <= `D `FALSE;
 `endif
-	x_result_sel_logic_x <= #1 `FALSE;
+	x_result_sel_logic_x <= `D `FALSE;
 `ifdef CFG_USER_ENABLED
-        x_result_sel_user_x <= #1 `FALSE;
+        x_result_sel_user_x <= `D `FALSE;
 `endif
-        x_result_sel_add_x <= #1 `FALSE;
-        m_result_sel_compare_x <= #1 `FALSE;
+        x_result_sel_add_x <= `D `FALSE;
+        m_result_sel_compare_x <= `D `FALSE;
 `ifdef CFG_PL_BARREL_SHIFT_ENABLED
-        m_result_sel_shift_x <= #1 `FALSE;
+        m_result_sel_shift_x <= `D `FALSE;
 `endif
-        w_result_sel_load_x <= #1 `FALSE;
+        w_result_sel_load_x <= `D `FALSE;
 `ifdef CFG_PL_MULTIPLY_ENABLED
-        w_result_sel_mul_x <= #1 `FALSE;
+        w_result_sel_mul_x <= `D `FALSE;
 `endif
-        x_bypass_enable_x <= #1 `FALSE;
-        m_bypass_enable_x <= #1 `FALSE;
-        write_enable_x <= #1 `FALSE;
-        write_idx_x <= #1 {`LM32_REG_IDX_WIDTH{1'b0}};
-        csr_x <= #1 {`LM32_CSR_WIDTH{1'b0}};
-        load_x <= #1 `FALSE;
-        store_x <= #1 `FALSE;
-        size_x <= #1 {`LM32_SIZE_WIDTH{1'b0}};
-        sign_extend_x <= #1 `FALSE;
-        adder_op_x <= #1 `FALSE;
-        adder_op_x_n <= #1 `FALSE;
-        logic_op_x <= #1 4'h0;
+        x_bypass_enable_x <= `D `FALSE;
+        m_bypass_enable_x <= `D `FALSE;
+        write_enable_x <= `D `FALSE;
+        write_idx_x <= `D {`LM32_REG_IDX_WIDTH{1'b0}};
+        csr_x <= `D {`LM32_CSR_WIDTH{1'b0}};
+        load_x <= `D `FALSE;
+        store_x <= `D `FALSE;
+        size_x <= `D {`LM32_SIZE_WIDTH{1'b0}};
+        sign_extend_x <= `D `FALSE;
+        adder_op_x <= `D `FALSE;
+        adder_op_x_n <= `D `FALSE;
+        logic_op_x <= `D 4'h0;
 `ifdef CFG_PL_BARREL_SHIFT_ENABLED
-        direction_x <= #1 `FALSE;
+        direction_x <= `D `FALSE;
 `endif
 `ifdef CFG_ROTATE_ENABLED
-        rotate_x <= #1 `FALSE;
+        rotate_x <= `D `FALSE;
 
 `endif
-        branch_x <= #1 `FALSE;
-        branch_predict_x <= #1 `FALSE;
-        branch_predict_taken_x <= #1 `FALSE;
-        condition_x <= #1 `LM32_CONDITION_U1;
+        branch_x <= `D `FALSE;
+        branch_predict_x <= `D `FALSE;
+        branch_predict_taken_x <= `D `FALSE;
+        condition_x <= `D `LM32_CONDITION_U1;
 `ifdef CFG_DEBUG_ENABLED
-        break_x <= #1 `FALSE;
+        break_x <= `D `FALSE;
 `endif
-        scall_x <= #1 `FALSE;
-        eret_x <= #1 `FALSE;
+        scall_x <= `D `FALSE;
+        eret_x <= `D `FALSE;
 `ifdef CFG_DEBUG_ENABLED
-        bret_x <= #1 `FALSE;
+        bret_x <= `D `FALSE;
 `endif
 `ifdef CFG_BUS_ERRORS_ENABLED
-        bus_error_x <= #1 `FALSE;
-        data_bus_error_exception_m <= #1 `FALSE;
+        bus_error_x <= `D `FALSE;
+        data_bus_error_exception_m <= `D `FALSE;
 `endif
-        csr_write_enable_x <= #1 `FALSE;
-        operand_m <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        branch_target_m <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        m_result_sel_compare_m <= #1 `FALSE;
+        csr_write_enable_x <= `D `FALSE;
+        operand_m <= `D {`LM32_WORD_WIDTH{1'b0}};
+        branch_target_m <= `D {`LM32_WORD_WIDTH{1'b0}};
+        m_result_sel_compare_m <= `D `FALSE;
 `ifdef CFG_PL_BARREL_SHIFT_ENABLED
-        m_result_sel_shift_m <= #1 `FALSE;
+        m_result_sel_shift_m <= `D `FALSE;
 `endif
-        w_result_sel_load_m <= #1 `FALSE;
+        w_result_sel_load_m <= `D `FALSE;
 `ifdef CFG_PL_MULTIPLY_ENABLED
-        w_result_sel_mul_m <= #1 `FALSE;
+        w_result_sel_mul_m <= `D `FALSE;
 `endif
-        m_bypass_enable_m <= #1 `FALSE;
-        branch_m <= #1 `FALSE;
-        branch_predict_m <= #1 `FALSE;
-	branch_predict_taken_m <= #1 `FALSE;
-        exception_m <= #1 `FALSE;
-        load_m <= #1 `FALSE;
-        store_m <= #1 `FALSE;
-        write_enable_m <= #1 `FALSE;
-        write_idx_m <= #1 {`LM32_REG_IDX_WIDTH{1'b0}};
-        condition_met_m <= #1 `FALSE;
+        m_bypass_enable_m <= `D `FALSE;
+        branch_m <= `D `FALSE;
+        branch_predict_m <= `D `FALSE;
+	branch_predict_taken_m <= `D `FALSE;
+        exception_m <= `D `FALSE;
+        load_m <= `D `FALSE;
+        store_m <= `D `FALSE;
+        write_enable_m <= `D `FALSE;
+        write_idx_m <= `D {`LM32_REG_IDX_WIDTH{1'b0}};
+        condition_met_m <= `D `FALSE;
 `ifdef CFG_DCACHE_ENABLED
-        dflush_m <= #1 `FALSE;
+        dflush_m <= `D `FALSE;
 `endif
 `ifdef CFG_DEBUG_ENABLED
-        debug_exception_m <= #1 `FALSE;
-        non_debug_exception_m <= #1 `FALSE;
+        debug_exception_m <= `D `FALSE;
+        non_debug_exception_m <= `D `FALSE;
 `endif
-        operand_w <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        w_result_sel_load_w <= #1 `FALSE;
+        operand_w <= `D {`LM32_WORD_WIDTH{1'b0}};
+        w_result_sel_load_w <= `D `FALSE;
 `ifdef CFG_PL_MULTIPLY_ENABLED
-        w_result_sel_mul_w <= #1 `FALSE;
+        w_result_sel_mul_w <= `D `FALSE;
 `endif
-        write_idx_w <= #1 {`LM32_REG_IDX_WIDTH{1'b0}};
-        write_enable_w <= #1 `FALSE;
+        write_idx_w <= `D {`LM32_REG_IDX_WIDTH{1'b0}};
+        write_enable_w <= `D `FALSE;
 `ifdef CFG_DEBUG_ENABLED
-        debug_exception_w <= #1 `FALSE;
-        non_debug_exception_w <= #1 `FALSE;
+        debug_exception_w <= `D `FALSE;
+        non_debug_exception_w <= `D `FALSE;
 `else
-        exception_w <= #1 `FALSE;
+        exception_w <= `D `FALSE;
 `endif
 `ifdef CFG_BUS_ERRORS_ENABLED
-        memop_pc_w <= #1 {`LM32_PC_WIDTH{1'b0}};
+        memop_pc_w <= `D {`LM32_PC_WIDTH{1'b0}};
 `endif
     end
     else
@@ -2421,105 +2421,105 @@ begin
         if (stall_x == `FALSE)
         begin
 `ifdef CFG_USER_ENABLED
-            user_opcode <= #1 user_opcode_d;
+            user_opcode <= `D user_opcode_d;
 `endif
-            operand_0_x <= #1 d_result_0;
-            operand_1_x <= #1 d_result_1;
-            store_operand_x <= #1 bypass_data_1;
-            branch_target_x <= #1 branch_reg_d == `TRUE ? bypass_data_0[`LM32_PC_RNG] : branch_target_d;
-            x_result_sel_csr_x <= #1 x_result_sel_csr_d;
+            operand_0_x <= `D d_result_0;
+            operand_1_x <= `D d_result_1;
+            store_operand_x <= `D bypass_data_1;
+            branch_target_x <= `D branch_reg_d == `TRUE ? bypass_data_0[`LM32_PC_RNG] : branch_target_d;
+            x_result_sel_csr_x <= `D x_result_sel_csr_d;
 `ifdef LM32_MC_ARITHMETIC_ENABLED
-            x_result_sel_mc_arith_x <= #1 x_result_sel_mc_arith_d;
+            x_result_sel_mc_arith_x <= `D x_result_sel_mc_arith_d;
 `endif
 `ifdef LM32_NO_BARREL_SHIFT
-            x_result_sel_shift_x <= #1 x_result_sel_shift_d;
+            x_result_sel_shift_x <= `D x_result_sel_shift_d;
 `endif
 `ifdef CFG_SIGN_EXTEND_ENABLED
-            x_result_sel_sext_x <= #1 x_result_sel_sext_d;
+            x_result_sel_sext_x <= `D x_result_sel_sext_d;
 `endif
-	    x_result_sel_logic_x <= #1 x_result_sel_logic_d;
+	    x_result_sel_logic_x <= `D x_result_sel_logic_d;
 `ifdef CFG_USER_ENABLED
-            x_result_sel_user_x <= #1 x_result_sel_user_d;
+            x_result_sel_user_x <= `D x_result_sel_user_d;
 `endif
-            x_result_sel_add_x <= #1 x_result_sel_add_d;
-            m_result_sel_compare_x <= #1 m_result_sel_compare_d;
+            x_result_sel_add_x <= `D x_result_sel_add_d;
+            m_result_sel_compare_x <= `D m_result_sel_compare_d;
 `ifdef CFG_PL_BARREL_SHIFT_ENABLED
-            m_result_sel_shift_x <= #1 m_result_sel_shift_d;
+            m_result_sel_shift_x <= `D m_result_sel_shift_d;
 `endif
-            w_result_sel_load_x <= #1 w_result_sel_load_d;
+            w_result_sel_load_x <= `D w_result_sel_load_d;
 `ifdef CFG_PL_MULTIPLY_ENABLED
-            w_result_sel_mul_x <= #1 w_result_sel_mul_d;
+            w_result_sel_mul_x <= `D w_result_sel_mul_d;
 `endif
-            x_bypass_enable_x <= #1 x_bypass_enable_d;
-            m_bypass_enable_x <= #1 m_bypass_enable_d;
-            load_x <= #1 load_d;
-            store_x <= #1 store_d;
-            branch_x <= #1 branch_d;
-	    branch_predict_x <= #1 branch_predict_d;
-	    branch_predict_taken_x <= #1 branch_predict_taken_d;
-	    write_idx_x <= #1 write_idx_d;
-            csr_x <= #1 csr_d;
-            size_x <= #1 size_d;
-            sign_extend_x <= #1 sign_extend_d;
-            adder_op_x <= #1 adder_op_d;
-            adder_op_x_n <= #1 ~adder_op_d;
-            logic_op_x <= #1 logic_op_d;
+            x_bypass_enable_x <= `D x_bypass_enable_d;
+            m_bypass_enable_x <= `D m_bypass_enable_d;
+            load_x <= `D load_d;
+            store_x <= `D store_d;
+            branch_x <= `D branch_d;
+	    branch_predict_x <= `D branch_predict_d;
+	    branch_predict_taken_x <= `D branch_predict_taken_d;
+	    write_idx_x <= `D write_idx_d;
+            csr_x <= `D csr_d;
+            size_x <= `D size_d;
+            sign_extend_x <= `D sign_extend_d;
+            adder_op_x <= `D adder_op_d;
+            adder_op_x_n <= `D ~adder_op_d;
+            logic_op_x <= `D logic_op_d;
 `ifdef CFG_PL_BARREL_SHIFT_ENABLED
-            direction_x <= #1 direction_d;
+            direction_x <= `D direction_d;
 `endif
 `ifdef CFG_ROTATE_ENABLED
-            rotate_x <= #1 rotate_d;
+            rotate_x <= `D rotate_d;
 `endif
-            condition_x <= #1 condition_d;
-            csr_write_enable_x <= #1 csr_write_enable_d;
+            condition_x <= `D condition_d;
+            csr_write_enable_x <= `D csr_write_enable_d;
 `ifdef CFG_DEBUG_ENABLED
-            break_x <= #1 break_d;
+            break_x <= `D break_d;
 `endif
-            scall_x <= #1 scall_d;
+            scall_x <= `D scall_d;
 `ifdef CFG_BUS_ERRORS_ENABLED
-            bus_error_x <= #1 bus_error_d;
+            bus_error_x <= `D bus_error_d;
 `endif
-            eret_x <= #1 eret_d;
+            eret_x <= `D eret_d;
 `ifdef CFG_DEBUG_ENABLED
-            bret_x <= #1 bret_d;
+            bret_x <= `D bret_d;
 `endif
-            write_enable_x <= #1 write_enable_d;
+            write_enable_x <= `D write_enable_d;
         end
 
         // X/M stage registers
 
         if (stall_m == `FALSE)
         begin
-            operand_m <= #1 x_result;
-            m_result_sel_compare_m <= #1 m_result_sel_compare_x;
+            operand_m <= `D x_result;
+            m_result_sel_compare_m <= `D m_result_sel_compare_x;
 `ifdef CFG_PL_BARREL_SHIFT_ENABLED
-            m_result_sel_shift_m <= #1 m_result_sel_shift_x;
+            m_result_sel_shift_m <= `D m_result_sel_shift_x;
 `endif
             if (exception_x == `TRUE)
             begin
-                w_result_sel_load_m <= #1 `FALSE;
+                w_result_sel_load_m <= `D `FALSE;
 `ifdef CFG_PL_MULTIPLY_ENABLED
-                w_result_sel_mul_m <= #1 `FALSE;
+                w_result_sel_mul_m <= `D `FALSE;
 `endif
             end
             else
             begin
-                w_result_sel_load_m <= #1 w_result_sel_load_x;
+                w_result_sel_load_m <= `D w_result_sel_load_x;
 `ifdef CFG_PL_MULTIPLY_ENABLED
-                w_result_sel_mul_m <= #1 w_result_sel_mul_x;
+                w_result_sel_mul_m <= `D w_result_sel_mul_x;
 `endif
             end
-            m_bypass_enable_m <= #1 m_bypass_enable_x;
+            m_bypass_enable_m <= `D m_bypass_enable_x;
 `ifdef CFG_PL_BARREL_SHIFT_ENABLED
 `endif
-            load_m <= #1 load_x;
-            store_m <= #1 store_x;
+            load_m <= `D load_x;
+            store_m <= `D store_x;
 `ifdef CFG_FAST_UNCONDITIONAL_BRANCH
-            branch_m <= #1 branch_x && !branch_taken_x;
+            branch_m <= `D branch_x && !branch_taken_x;
 `else
-            branch_m <= #1 branch_x;
-	    branch_predict_m <= #1 branch_predict_x;
-	    branch_predict_taken_m <= #1 branch_predict_taken_x;
+            branch_m <= `D branch_x;
+	    branch_predict_m <= `D branch_predict_x;
+	    branch_predict_taken_m <= `D branch_predict_taken_x;
 `endif
 `ifdef CFG_DEBUG_ENABLED
 	   // Data bus errors are generated by the wishbone and are
@@ -2528,18 +2528,18 @@ begin
 	   // in same cycle (causing a debug exception). Handle non
 	   // -debug exception first!
             if (non_debug_exception_x == `TRUE)
-                write_idx_m <= #1 `LM32_EA_REG;
+                write_idx_m <= `D `LM32_EA_REG;
             else if (debug_exception_x == `TRUE)
-                write_idx_m <= #1 `LM32_BA_REG;
+                write_idx_m <= `D `LM32_BA_REG;
             else
-                write_idx_m <= #1 write_idx_x;
+                write_idx_m <= `D write_idx_x;
 `else
             if (exception_x == `TRUE)
-                write_idx_m <= #1 `LM32_EA_REG;
+                write_idx_m <= `D `LM32_EA_REG;
             else
-                write_idx_m <= #1 write_idx_x;
+                write_idx_m <= `D write_idx_x;
 `endif
-            condition_met_m <= #1 condition_met_x;
+            condition_met_m <= `D condition_met_x;
 `ifdef CFG_DEBUG_ENABLED
 	   if (exception_x == `TRUE)
 	     if ((dc_re == `TRUE)
@@ -2548,28 +2548,28 @@ begin
  `endif
 		 || ((debug_exception_x == `TRUE)
 		     && (non_debug_exception_x == `FALSE)))
-	       branch_target_m <= #1 {deba, eid_x, {3{1'b0}}};
+	       branch_target_m <= `D {deba, eid_x, {3{1'b0}}};
 	     else
-	       branch_target_m <= #1 {eba, eid_x, {3{1'b0}}};
+	       branch_target_m <= `D {eba, eid_x, {3{1'b0}}};
 	   else
-	     branch_target_m <= #1 branch_target_x;
+	     branch_target_m <= `D branch_target_x;
 `else
-            branch_target_m <= #1 exception_x == `TRUE ? {eba, eid_x, {3{1'b0}}} : branch_target_x;
+            branch_target_m <= `D exception_x == `TRUE ? {eba, eid_x, {3{1'b0}}} : branch_target_x;
 `endif
 `ifdef CFG_TRACE_ENABLED
-            eid_m <= #1 eid_x;
+            eid_m <= `D eid_x;
 `endif
 `ifdef CFG_DCACHE_ENABLED
-            dflush_m <= #1 dflush_x;
+            dflush_m <= `D dflush_x;
 `endif
-            eret_m <= #1 eret_q_x;
+            eret_m <= `D eret_q_x;
 `ifdef CFG_DEBUG_ENABLED
-            bret_m <= #1 bret_q_x;
+            bret_m <= `D bret_q_x;
 `endif
-            write_enable_m <= #1 exception_x == `TRUE ? `TRUE : write_enable_x;
+            write_enable_m <= `D exception_x == `TRUE ? `TRUE : write_enable_x;
 `ifdef CFG_DEBUG_ENABLED
-            debug_exception_m <= #1 debug_exception_x;
-            non_debug_exception_m <= #1 non_debug_exception_x;
+            debug_exception_m <= `D debug_exception_x;
+            non_debug_exception_m <= `D non_debug_exception_x;
 `endif
         end
 
@@ -2577,11 +2577,11 @@ begin
         if (stall_m == `FALSE)
         begin
             if ((exception_x == `TRUE) && (q_x == `TRUE) && (stall_x == `FALSE))
-                exception_m <= #1 `TRUE;
+                exception_m <= `D `TRUE;
             else
-                exception_m <= #1 `FALSE;
+                exception_m <= `D `FALSE;
 `ifdef CFG_BUS_ERRORS_ENABLED
-	   data_bus_error_exception_m <= #1    (data_bus_error_exception == `TRUE)
+	   data_bus_error_exception_m <= `D    (data_bus_error_exception == `TRUE)
 `ifdef CFG_DEBUG_ENABLED
 					 && (reset_exception == `FALSE)
 `endif
@@ -2591,28 +2591,28 @@ begin
 
         // M/W stage registers
 `ifdef CFG_BUS_ERRORS_ENABLED
-        operand_w <= #1 exception_m == `TRUE ? (data_bus_error_exception_m ? {memop_pc_w, 2'b00} : {pc_m, 2'b00}) : m_result;
+        operand_w <= `D exception_m == `TRUE ? (data_bus_error_exception_m ? {memop_pc_w, 2'b00} : {pc_m, 2'b00}) : m_result;
 `else
-        operand_w <= #1 exception_m == `TRUE ? {pc_m, 2'b00} : m_result;
+        operand_w <= `D exception_m == `TRUE ? {pc_m, 2'b00} : m_result;
 `endif
-        w_result_sel_load_w <= #1 w_result_sel_load_m;
+        w_result_sel_load_w <= `D w_result_sel_load_m;
 `ifdef CFG_PL_MULTIPLY_ENABLED
-        w_result_sel_mul_w <= #1 w_result_sel_mul_m;
+        w_result_sel_mul_w <= `D w_result_sel_mul_m;
 `endif
-        write_idx_w <= #1 write_idx_m;
+        write_idx_w <= `D write_idx_m;
 `ifdef CFG_TRACE_ENABLED
-        eid_w <= #1 eid_m;
-        eret_w <= #1 eret_m;
+        eid_w <= `D eid_m;
+        eret_w <= `D eret_m;
 `ifdef CFG_DEBUG_ENABLED
-        bret_w <= #1 bret_m;
+        bret_w <= `D bret_m;
 `endif
 `endif
-        write_enable_w <= #1 write_enable_m;
+        write_enable_w <= `D write_enable_m;
 `ifdef CFG_DEBUG_ENABLED
-        debug_exception_w <= #1 debug_exception_m;
-        non_debug_exception_w <= #1 non_debug_exception_m;
+        debug_exception_w <= `D debug_exception_m;
+        non_debug_exception_w <= `D non_debug_exception_m;
 `else
-        exception_w <= #1 exception_m;
+        exception_w <= `D exception_m;
 `endif
 `ifdef CFG_BUS_ERRORS_ENABLED
         if (   (stall_m == `FALSE)
@@ -2621,7 +2621,7 @@ begin
                 || (store_q_m == `TRUE)
                )
 	   )
-          memop_pc_w <= #1 pc_m;
+          memop_pc_w <= `D pc_m;
 `endif
     end
 end
@@ -2633,26 +2633,26 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        use_buf <= #1 `FALSE;
-        reg_data_buf_0 <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        reg_data_buf_1 <= #1 {`LM32_WORD_WIDTH{1'b0}};
+        use_buf <= `D `FALSE;
+        reg_data_buf_0 <= `D {`LM32_WORD_WIDTH{1'b0}};
+        reg_data_buf_1 <= `D {`LM32_WORD_WIDTH{1'b0}};
     end
     else
     begin
         if (stall_d == `FALSE)
-            use_buf <= #1 `FALSE;
+            use_buf <= `D `FALSE;
         else if (use_buf == `FALSE)
         begin
-            reg_data_buf_0 <= #1 reg_data_live_0;
-            reg_data_buf_1 <= #1 reg_data_live_1;
-            use_buf <= #1 `TRUE;
+            reg_data_buf_0 <= `D reg_data_live_0;
+            reg_data_buf_1 <= `D reg_data_live_1;
+            use_buf <= `D `TRUE;
         end
         if (reg_write_enable_q_w == `TRUE)
         begin
             if (write_idx_w == read_idx_0_d)
-                reg_data_buf_0 <= #1 w_result;
+                reg_data_buf_0 <= `D w_result;
             if (write_idx_w == read_idx_1_d)
-                reg_data_buf_1 <= #1 w_result;
+                reg_data_buf_1 <= `D w_result;
         end
     end
 end
@@ -2664,42 +2664,42 @@ end
 always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE) begin
-        registers[0] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[1] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[2] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[3] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[4] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[5] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[6] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[7] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[8] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[9] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[10] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[11] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[12] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[13] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[14] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[15] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[16] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[17] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[18] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[19] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[20] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[21] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[22] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[23] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[24] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[25] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[26] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[27] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[28] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[29] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[30] <= #1 {`LM32_WORD_WIDTH{1'b0}};
-        registers[31] <= #1 {`LM32_WORD_WIDTH{1'b0}};
+        registers[0] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[1] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[2] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[3] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[4] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[5] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[6] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[7] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[8] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[9] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[10] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[11] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[12] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[13] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[14] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[15] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[16] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[17] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[18] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[19] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[20] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[21] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[22] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[23] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[24] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[25] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[26] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[27] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[28] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[29] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[30] <= `D {`LM32_WORD_WIDTH{1'b0}};
+        registers[31] <= `D {`LM32_WORD_WIDTH{1'b0}};
         end
     else begin
         if (reg_write_enable_q_w == `TRUE)
-          registers[write_idx_w] <= #1 w_result;
+          registers[write_idx_w] <= `D w_result;
         end
 end
 `endif
@@ -2710,19 +2710,19 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        trace_pc_valid <= #1 `FALSE;
-        trace_pc <= #1 {`LM32_PC_WIDTH{1'b0}};
-        trace_exception <= #1 `FALSE;
-        trace_eid <= #1 `LM32_EID_RESET;
-        trace_eret <= #1 `FALSE;
+        trace_pc_valid <= `D `FALSE;
+        trace_pc <= `D {`LM32_PC_WIDTH{1'b0}};
+        trace_exception <= `D `FALSE;
+        trace_eid <= `D `LM32_EID_RESET;
+        trace_eret <= `D `FALSE;
 `ifdef CFG_DEBUG_ENABLED
-        trace_bret <= #1 `FALSE;
+        trace_bret <= `D `FALSE;
 `endif
-        pc_c <= #1 `CFG_EBA_RESET/4;
+        pc_c <= `D `CFG_EBA_RESET/4;
     end
     else
     begin
-        trace_pc_valid <= #1 `FALSE;
+        trace_pc_valid <= `D `FALSE;
         // Has an exception occured
 `ifdef CFG_DEBUG_ENABLED
         if ((debug_exception_q_w == `TRUE) || (non_debug_exception_q_w == `TRUE))
@@ -2730,13 +2730,13 @@ begin
         if (exception_q_w == `TRUE)
 `endif
         begin
-            trace_exception <= #1 `TRUE;
-            trace_pc_valid <= #1 `TRUE;
-            trace_pc <= #1 pc_w;
-            trace_eid <= #1 eid_w;
+            trace_exception <= `D `TRUE;
+            trace_pc_valid <= `D `TRUE;
+            trace_pc <= `D pc_w;
+            trace_eid <= `D eid_w;
         end
         else
-            trace_exception <= #1 `FALSE;
+            trace_exception <= `D `FALSE;
 
         if ((valid_w == `TRUE) && (!kill_w))
         begin
@@ -2744,22 +2744,22 @@ begin
             if (pc_c + 1'b1 != pc_w)
             begin
                 // Non-sequential instruction
-                trace_pc_valid <= #1 `TRUE;
-                trace_pc <= #1 pc_w;
+                trace_pc_valid <= `D `TRUE;
+                trace_pc <= `D pc_w;
             end
             // Record PC so we can determine if next instruction is sequential or not
-            pc_c <= #1 pc_w;
+            pc_c <= `D pc_w;
             // Indicate if it was an eret/bret instruction
-            trace_eret <= #1 eret_w;
+            trace_eret <= `D eret_w;
 `ifdef CFG_DEBUG_ENABLED
-            trace_bret <= #1 bret_w;
+            trace_bret <= `D bret_w;
 `endif
         end
         else
         begin
-            trace_eret <= #1 `FALSE;
+            trace_eret <= `D `FALSE;
 `ifdef CFG_DEBUG_ENABLED
-            trace_bret <= #1 `FALSE;
+            trace_bret <= `D `FALSE;
 `endif
         end
     end

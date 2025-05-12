@@ -220,64 +220,64 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        ie <= #1 `FALSE;
-        eie <= #1 `FALSE;
+        ie <= `D `FALSE;
+        eie <= `D `FALSE;
 `ifdef CFG_DEBUG_ENABLED
-        bie <= #1 `FALSE;
+        bie <= `D `FALSE;
 `endif
-        im <= #1 {interrupts{1'b0}};
-        ip <= #1 {interrupts{1'b0}};
+        im <= `D {interrupts{1'b0}};
+        ip <= `D {interrupts{1'b0}};
     end
     else
     begin
         // Set IP bit when interrupt line is asserted
-        ip <= #1 asserted;
+        ip <= `D asserted;
 `ifdef CFG_DEBUG_ENABLED
         if (non_debug_exception == `TRUE)
         begin
             // Save and then clear interrupt enable
-            eie <= #1 ie;
-            ie <= #1 `FALSE;
+            eie <= `D ie;
+            ie <= `D `FALSE;
         end
         else if (debug_exception == `TRUE)
         begin
             // Save and then clear interrupt enable
-            bie <= #1 ie;
-            ie <= #1 `FALSE;
+            bie <= `D ie;
+            ie <= `D `FALSE;
         end
 `else
         if (exception == `TRUE)
         begin
             // Save and then clear interrupt enable
-            eie <= #1 ie;
-            ie <= #1 `FALSE;
+            eie <= `D ie;
+            ie <= `D `FALSE;
         end
 `endif
         else if (stall_x == `FALSE)
         begin
             if (eret_q_x == `TRUE)
                 // Restore interrupt enable
-                ie <= #1 eie;
+                ie <= `D eie;
 `ifdef CFG_DEBUG_ENABLED
             else if (bret_q_x == `TRUE)
                 // Restore interrupt enable
-                ie <= #1 bie;
+                ie <= `D bie;
 `endif
             else if (csr_write_enable == `TRUE)
             begin
                 // Handle wcsr write
                 if (csr == `LM32_CSR_IE)
                 begin
-                    ie <= #1 csr_write_data[0];
-                    eie <= #1 csr_write_data[1];
+                    ie <= `D csr_write_data[0];
+                    eie <= `D csr_write_data[1];
 `ifdef CFG_DEBUG_ENABLED
-                    bie <= #1 csr_write_data[2];
+                    bie <= `D csr_write_data[2];
 `endif
                 end
                 if (csr == `LM32_CSR_IM)
-                    im <= #1 csr_write_data[interrupts-1:0];
+                    im <= `D csr_write_data[interrupts-1:0];
                 if (csr == `LM32_CSR_IP)
-                    ip <= #1 asserted & ~csr_write_data[interrupts-1:0];
+                    ip <= `D asserted & ~csr_write_data[interrupts-1:0];
             end
         end
     end
@@ -290,61 +290,61 @@ always @(posedge clk_i `CFG_RESET_SENSITIVITY)
 begin
     if (rst_i == `TRUE)
     begin
-        ie <= #1 `FALSE;
-        eie <= #1 `FALSE;
+        ie <= `D `FALSE;
+        eie <= `D `FALSE;
 `ifdef CFG_DEBUG_ENABLED
-        bie <= #1 `FALSE;
+        bie <= `D `FALSE;
 `endif
-        ip <= #1 {interrupts{1'b0}};
+        ip <= `D {interrupts{1'b0}};
     end
     else
     begin
         // Set IP bit when interrupt line is asserted
-        ip <= #1 asserted;
+        ip <= `D asserted;
 `ifdef CFG_DEBUG_ENABLED
         if (non_debug_exception == `TRUE)
         begin
             // Save and then clear interrupt enable
-            eie <= #1 ie;
-            ie <= #1 `FALSE;
+            eie <= `D ie;
+            ie <= `D `FALSE;
         end
         else if (debug_exception == `TRUE)
         begin
             // Save and then clear interrupt enable
-            bie <= #1 ie;
-            ie <= #1 `FALSE;
+            bie <= `D ie;
+            ie <= `D `FALSE;
         end
 `else
         if (exception == `TRUE)
         begin
             // Save and then clear interrupt enable
-            eie <= #1 ie;
-            ie <= #1 `FALSE;
+            eie <= `D ie;
+            ie <= `D `FALSE;
         end
 `endif
         else if (stall_x == `FALSE)
         begin
             if (eret_q_x == `TRUE)
                 // Restore interrupt enable
-                ie <= #1 eie;
+                ie <= `D eie;
 `ifdef CFG_DEBUG_ENABLED
             else if (bret_q_x == `TRUE)
                 // Restore interrupt enable
-                ie <= #1 bie;
+                ie <= `D bie;
 `endif
             else if (csr_write_enable == `TRUE)
             begin
                 // Handle wcsr write
                 if (csr == `LM32_CSR_IE)
                 begin
-                    ie <= #1 csr_write_data[0];
-                    eie <= #1 csr_write_data[1];
+                    ie <= `D csr_write_data[0];
+                    eie <= `D csr_write_data[1];
 `ifdef CFG_DEBUG_ENABLED
-                    bie <= #1 csr_write_data[2];
+                    bie <= `D csr_write_data[2];
 `endif
                 end
                 if (csr == `LM32_CSR_IP)
-                    ip <= #1 asserted & ~csr_write_data[interrupts-1:0];
+                    ip <= `D asserted & ~csr_write_data[interrupts-1:0];
             end
         end
     end

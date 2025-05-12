@@ -352,4 +352,13 @@
 `define DOWNLOAD_BUFFER_SIZE            128
 //`define DOWNLOAD_BUFFER_SIZE_256        1
 
+// Nonblocking #1 delays were not in the original LM32 releases.
+// Add the ability to enable or disable them at build time.
+// http://sunburst-design.com/papers/CummingsSNUG2002Boston_NBAwithDelays.pdf
+`ifdef NBD
+`define D #1
+`else
+`define D
+`endif
+
 `endif
